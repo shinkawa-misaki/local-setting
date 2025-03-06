@@ -108,7 +108,7 @@ Log::RegisterLogger() {
 
 Log::Using() {
   local logger="$1"
-  shift
+  shift;
   if [[ ! -z ${__oo__loggers["$logger"]} ]]
   then
       ${__oo__loggers["$logger"]} "$@"
@@ -142,5 +142,5 @@ Log::RegisterLogger WARN Logger::WARN
 Log::RegisterLogger CUSTOM Logger::CUSTOM
 Log::RegisterLogger DETAILED Logger::DETAILED
 
-alias namespace="Log::NameScope"
+alias namespace='Log::NameScope'
 namespace oo/log

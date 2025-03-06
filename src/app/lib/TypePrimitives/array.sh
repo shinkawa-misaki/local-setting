@@ -20,6 +20,15 @@ array.delete() {
   @return #this
 }
 
+array.forget() {
+  for index in "${!this[@]}"
+  do
+    unset this[$index]
+  done
+
+  @return #this
+}
+
 array.push() {
   [...rest] values
 

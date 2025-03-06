@@ -16,13 +16,50 @@ System::SourceHTTP() {
   local -i RETRIES=3
   shift
 
-  if hash curl 2>/dev/null
+  if hash curl 2> /dev/null
   then
-    builtin source <(curl --fail -sL --retry $RETRIES "${URL}" || { [[ "$URL" != *'.sh' && "$URL" != *'.bash' ]] && curl --fail -sL --retry $RETRIES "${URL}.sh"; } || echo "e='Cannot import $URL' throw") "$@"
+    builtin source < $(curl --fail -sL --retry $RETRIES "${URL}" || { [[ "$URL" != *'.sh' && "$URL" != *'.bash' ]] && curl --fail -sL --retry $RETRIES "${URL}.sh"; } || echo "e='Cannot import $URL' throw") "$@"
   else
-    builtin source <(wget -t $RETRIES -O - -o /dev/null "${URL}" || { [[ "$URL" != *'.sh' && "$URL" != *'.bash' ]] && wget -t $RETRIES -O - -o /dev/null "${URL}.sh"; } || echo "e='Cannot import $URL' throw") "$@"
+    builtin source < $(wget -t $RETRIES -O - -o /dev/null "${URL}" || { [[ "$URL" != *'.sh' && "$URL" != *'.bash' ]] && wget -t $RETRIES -O - -o /dev/null "${URL}.sh"; } || echo "e='Cannot import $URL' throw") "$@"
   fi
   __oo__importedFiles+=( "$URL" )
+}
+
+System::SourceFile() {
+  local libPath="$1"
+  shift
+
+  # DEBUG subject=level3 Log "Trying to load from: ${libPath}"
+  [[ ! -f "$libPath" ]] && return 1 # && e="Cannot import $libPath" throw
+
+  libPath="$(File::GetAbsolutePath "$libPath")"
+
+  # echo "importing $libPath"
+
+  # [ -e "$libPath" ] && echo "Trying to load from: ${libPath}"
+  if [[ -f "$libPath" ]]
+  then
+    ## if already imported let's return
+    # if declare -f "Array::Contains" &> /dev/null &&
+    if [[ "${__oo__allowFileReloading-}" != true ]] && [[ ! -z "${__oo__importedFiles[*]}" ]] && Array::Contains "$libPath" "${__oo__importedFiles[@]}"
+    then
+      # DEBUG subject=level3 Log "File previously imported: ${libPath}"
+      return 0
+    fi
+
+    # DEBUG subject=level2 Log "Importing: $libPath"
+    importedFile+=( "$libPath" )
+    __oo__importedFiles=( $( {
+              printf "%s\n" "${__oo__importedFiles[@]}"
+              printf "%s\n" "${importedFile[@]}"
+            } | sort -u ) )
+    __oo__importParent=$(dirname "$libPath") System::WrapSource "$libPath" "$@"
+    # eval "$(<"$libPath")"
+
+  else
+    :
+    # DEBUG subject=level2 Log "File doesn't exist when importing: $libPath"
+  fi
 }
 
 System::SourcePath() {
@@ -114,40 +151,6 @@ System::WrapSource() {
   shift
 
   builtin source "$libPath" "$@" || throw "Unable to load $libPath"
-}
-
-System::SourceFile() {
-  local libPath="$1"
-  shift
-
-  # DEBUG subject=level3 Log "Trying to load from: ${libPath}"
-  [[ ! -f "$libPath" ]] && return 1 # && e="Cannot import $libPath" throw
-
-  libPath="$(File::GetAbsolutePath "$libPath")"
-
-  # echo "importing $libPath"
-
-  # [ -e "$libPath" ] && echo "Trying to load from: ${libPath}"
-  if [[ -f "$libPath" ]]
-  then
-    ## if already imported let's return
-    # if declare -f "Array::Contains" &> /dev/null &&
-    if [[ "${__oo__allowFileReloading-}" != true ]] && [[ ! -z "${__oo__importedFiles[*]}" ]] && Array::Contains "$libPath" "${__oo__importedFiles[@]}"
-    then
-      # DEBUG subject=level3 Log "File previously imported: ${libPath}"
-      return 0
-    fi
-
-    # DEBUG subject=level2 Log "Importing: $libPath"
-
-    __oo__importedFiles+=( "$libPath" )
-    __oo__importParent=$(dirname "$libPath") System::WrapSource "$libPath" "$@"
-    # eval "$(<"$libPath")"
-
-  else
-    :
-    # DEBUG subject=level2 Log "File doesn't exist when importing: $libPath"
-  fi
 }
 
 System::Bootstrap() {

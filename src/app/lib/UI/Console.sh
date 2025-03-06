@@ -2,7 +2,7 @@ import UI/Color
 
 Console::WriteStdErr() {
   # http://stackoverflow.com/questions/2990414/echo-that-outputs-to-stderr
-  cat <<< "$*" 1>&2
+  cat <<< "$(printf "$*")" 1>&2
   return
 }
 
@@ -13,5 +13,5 @@ Console::WriteStdErrAnnotated() {
   local type=$4
   shift; shift; shift; shift
 
-  Console::WriteStdErr "$color[$type] $(UI.Color.Blue)[${script}:${lineNo}]$(UI.Color.Default) $* "
+  Console::WriteStdErr "$color[$(date +"%Y/%m/%d %H:%M:%S")] $color[$type] $(UI.Color.Blue)[${script}:${lineNo}]$(UI.Color.Default) $* "
 }
