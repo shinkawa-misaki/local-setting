@@ -1,0 +1,44 @@
+# nomatch setting
+unsetopt nomatch
+
+# pear
+PATH=$HOME/pear/bin:$PATH
+
+# composer
+PATH=$HOME/.composer/vendor/bin:$PATH
+
+function checkAppleSilicon() {
+  local arch_type
+  local is_rosetta
+  arch_type=$(arch)
+  is_rosetta=$(sysctl -in sysctl.proc_translated 2>/dev/null)
+
+  if [[ "$arch_type" == "arm64" || "$is_rosetta" == "1" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# M1以降用の対応
+if checkAppleSilicon; then
+  PATH=$(printenv PATH | sed -e 's/usr\/local/opt\/homebrew/g')
+  MANPATH=$(printenv MANPATH | sed -e 's/usr\/local/opt\/homebrew/g')
+fi
+
+# local-setting dir
+export LOCAL_SETTING=$HOME/workspace/umechan
+
+# GITHUB
+export GITHUB_TOKEN=@GITHUB_TOKEN@
+
+# passphrase
+export PASS_PHRASE=@PASS_PHRASE@
+
+# LDAP
+export LDAP_USER=@LDAP_USER@
+export LDAP_STG_PASS=@LDAP_STG_PASS@
+export LDAP_PRD_PASS=@LDAP_PRD_PASS@
+
+# ssh-addを常態化
+$LOCAL_SETTING/localSetting.sh update ssh ssh-add &> /dev/null

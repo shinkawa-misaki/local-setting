@@ -1,0 +1,16 @@
+*.swp
+.idea
+.DS_Store
+
+## SSH key files
+src/resource/ssh/keys/github/*
+
+# install files
+src/resource/docker/dump.sql
+src/resource/tool/AWSCLIV2.pkg
+src/resource/tool/go-pear.pharg
+src/resource/*/aws_*.json
+
+# modules oliginal files
+src/resource/modules/*/*.sql
+src/resource/modules/*/aws*.json
