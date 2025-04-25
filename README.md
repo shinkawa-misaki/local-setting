@@ -21,3 +21,12 @@ Local environment construction tool by bash-oo-framework
         └── lib
             └── oo-bootstrap.sh
 ```
+
+
+# ブランチ構成
+
+| メインブランチ             | サブブランチ     |
+|:--------------------------|:----------------|
+| **master/fix_ticket_2**   | commands        |
+|                           | entry_point     |
+|                           | oo_bootstrap    |
