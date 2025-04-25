@@ -19,14 +19,15 @@ Local environment construction tool by bash-oo-framework
         │   ├── upgrade.sh
         │   └── zsh.sh
         └── lib
+            ├── Array
+            │   └── Contains.sh
             └── oo-bootstrap.sh
 ```
 
 
-# ブランチ構成
-
-| メインブランチ             | サブブランチ     | 説明 |
-|:--------------------------|:----------------|----|
-| **master/fix_ticket_2**   | commands        |    |
-|                           | entry_point     |    |
-|                           | oo_bootstrap    |    |
+# 使用したブランチ
+- master/fix_ticket_2
+- entry_point
+- commands
+- oo_bootstrap
+- array_contains_sh
