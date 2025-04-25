@@ -25,8 +25,8 @@ Local environment construction tool by bash-oo-framework
 
 # ブランチ構成
 
-| メインブランチ             | サブブランチ     |
-|:--------------------------|:----------------|
-| **master/fix_ticket_2**   | commands        |
-|                           | entry_point     |
-|                           | oo_bootstrap    |
+| メインブランチ             | サブブランチ     | 説明 |
+|:--------------------------|:----------------|----|
+| **master/fix_ticket_2**   | commands        |    |
+|                           | entry_point     |    |
+|                           | oo_bootstrap    |    |
