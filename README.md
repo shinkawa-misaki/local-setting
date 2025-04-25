@@ -21,7 +21,10 @@ Local environment construction tool by bash-oo-framework
         └── lib
             ├── Array
             │   └── Contains.sh
-            └── oo-bootstrap.sh
+            ├── oo-bootstrap.sh
+            └── util
+                ├── exception.sh
+                └── type.sh
 ```
 
 
@@ -31,3 +34,4 @@ Local environment construction tool by bash-oo-framework
 - commands
 - oo_bootstrap
 - array_contains_sh
+- util_type_exception_sh
