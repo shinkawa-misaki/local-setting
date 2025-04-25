@@ -35,3 +35,4 @@ Local environment construction tool by bash-oo-framework
 - oo_bootstrap
 - array_contains_sh
 - util_type_exception_sh
+- util-ext_log_zsh_alias_providers
