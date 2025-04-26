@@ -22,9 +22,14 @@ Local environment construction tool by bash-oo-framework
             ├── Array
             │   └── Contains.sh
             ├── oo-bootstrap.sh
-            └── util
-                ├── exception.sh
-                └── type.sh
+            ├── util
+            │   ├── exception.sh
+            │   └── type.sh
+            └── util_ext
+                ├── alias.sh
+                ├── log.sh
+                ├── providers.sh
+                └── zsh.sh
 ```
 
 
