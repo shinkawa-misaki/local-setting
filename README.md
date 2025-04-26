@@ -41,3 +41,4 @@ Local environment construction tool by bash-oo-framework
 - array_contains_sh
 - util_type_exception_sh
 - util-ext_log_zsh_alias_providers
+- trace_and_tweak (だいぶ慣れて来たので一気に最後まで確認する用のブランチ。)
