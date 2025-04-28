@@ -1,3 +1,5 @@
+namespace util
+
 # no dependencies
 
 # どんな「コマンド」かを返すラベル付け関数

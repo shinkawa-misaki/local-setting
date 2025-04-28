@@ -80,4 +80,4 @@ Local environment construction tool by bash-oo-framework
 </table>
 
 作業メモ：
-util/exist.sh からチェック再開
+util/確認終了

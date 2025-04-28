@@ -1,3 +1,4 @@
+namespace util
 # もしメジャーバージョンが 4 未満なら、というテスト
 [[ "${BASH_VERSINFO[0]}" -lt 4 ]] \
   && echo "The module you are trying to load requires bash >= 4" \

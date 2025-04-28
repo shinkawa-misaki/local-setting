@@ -1,7 +1,4 @@
-#!/usr/bin/env bash
-set -e
-# 必要かと思って入れてみた。
-namespace util/type
+namespace util
 
 import util/bash4
 import Array/Contains String/SanitizeForVariable
