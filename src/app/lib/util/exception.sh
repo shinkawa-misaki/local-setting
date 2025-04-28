@@ -1,17 +1,9 @@
-#!/usr/bin/env bash
-set -e
-
-namespace util/exception
+namespace util
 import String/GetSpaces String/SlashReplacement UI/Color UI/Console
 
 #########################
 ### HANDLE EXCEPTIONS ###
 #########################
-# 例外ハンドリングユーティリティ
-# 目的：
-# Bash スクリプト実行中に発生したエラーをキャッチし、堅牢かつ見やすく
-# エラーメッセージとコールスタックを出力
-#  throwエイリアスで手動例外投げや try/catch 風のフロー制御を実現??
 
 # ERR トラップ発火時に command_not_found_handle
 trap "__EXCEPTION_TYPE__=\"\$_\" command_not_found_handle \$? \$BASH_COMMAND" ERR

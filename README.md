@@ -32,9 +32,18 @@ Local environment construction tool by bash-oo-framework
             │   └── Contains.sh
             ├── oo-bootstrap.sh
             ├── util
+            │   ├── bash4.sh
             │   ├── class.sh
+            │   ├── command.sh
             │   ├── exception.sh
-            │   └── type.sh
+            │   ├── exist.sh
+            │   ├── log.sh
+            │   ├── namedParameters.sh
+            │   ├── pipe.sh
+            │   ├── test.sh
+            │   ├── tryCatch.sh
+            │   ├── type.sh
+            │   └── variable.sh
             └── util_ext
                 ├── alias.sh
                 ├── awk.sh
@@ -70,4 +79,5 @@ Local environment construction tool by bash-oo-framework
 </tr>
 </table>
 
-
+作業メモ：
+util/exist.sh からチェック再開

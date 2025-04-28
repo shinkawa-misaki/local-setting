@@ -1,4 +1,5 @@
-namespace util/type
+namespace util
+
 import util/type String/SanitizeForVariable
 # ------------------------ #
 
