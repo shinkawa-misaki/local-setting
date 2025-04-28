@@ -57,11 +57,11 @@ Local environment construction tool by bash-oo-framework
 
 <table>
 <tr>
-<th class="left-align">
+<th>
 <details>
 <summary>各ファイルから処理を追う</summary>
 <details>
-<summary class="summary-color2"><b>localSetting.sh</b></summary>
+<summary><b>localSetting.sh</b></summary>
 ・src/app/commands/zsh.sh<br>
 ・src/app/commands/alias.sh<br>
 ・src/app/commands/toolInstall.sh<br>
@@ -72,7 +72,7 @@ Local environment construction tool by bash-oo-framework
 ・src/app/commands/modules/${module}.sh
 </details>
 <details>
-<summary class="summary-color2"><b>src/app/commands/modules/${module}.sh</b></summary>
+<summary><b>src/app/commands/modules/${module}.sh</b></summary>
 ・src/app/lib/oo-bootstrap.sh<br>
 ・src/app/lib/util/type.sh<br>
 ・src/app/lib/util/exception.sh<br>
@@ -81,12 +81,12 @@ Local environment construction tool by bash-oo-framework
 ・src/app/helpers/dockerProject.sh
 </details>
 <details>
-<summary class="summary-color2"><b>src/app/lib/helpers/tool/template.sh</b></summary>
+<summary><b>src/app/lib/helpers/tool/template.sh</b></summary>
 ・src/app/lib/util_ext/zsh.sh<br>
 ・src/app/helpers/tool/common.sh
 </details>
 <details>
-<summary class="summary-color2"><b>src/app/helpers/dockerProject.sh</b></summary>
+<summary><b>src/app/helpers/dockerProject.sh</b></summary>
 ・src/app/lib/util/class.sh<br>
 ・src/app/lib/util_ext/log.sh<br>
 ・src/app/lib/util_ext/docker.sh<br>
@@ -99,7 +99,7 @@ Local environment construction tool by bash-oo-framework
 ・src/app/helpers/config.sh
 </details>
 <details>
-<summary class="summary-color2"><b>src/app/helpers/yml.sh</b></summary>
+<summary><b>src/app/helpers/yml.sh</b></summary>
 ・src/app/lib/util/class.sh<br>
 ・src/app/lib/util_ext/log.sh<br>
 ・src/app/lib/util_ext/yml.sh<br>
@@ -110,20 +110,3 @@ Local environment construction tool by bash-oo-framework
 </details>
 </tr>
 </table>
-
-
-<style>
-.left-align {
-  text-align: left;
-}
-</style>
-<style>
-.summary-color1 {
-    color: brown;
-}
-</style>
-<style>
-.summary-color2 {
-    color: cyan;
-}
-</style>
