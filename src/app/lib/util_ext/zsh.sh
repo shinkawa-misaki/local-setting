@@ -1,9 +1,4 @@
-#!/usr/bin/env bash
-set -e
-
-# 「zshrc」や「zshrc_original」ファイルを操作するための専用ユーティリティ群
-
-namespace util-ext/zsh
+namespace util-ext
 
 ## IMPORT ##
 # ------------------------ #

@@ -1,7 +1,4 @@
-#!/usr/bin/env bash
-set -e
-
-namespace util-ext/providers
+namespace util-ext
 
 ## IMPORT ##
 # ------------------------ #

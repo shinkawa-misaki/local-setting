@@ -1,4 +1,4 @@
-namespace util-ext/yml
+namespace util-ext
 
 ## IMPORT ##
 # ------------------------ #

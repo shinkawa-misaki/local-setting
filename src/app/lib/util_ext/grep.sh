@@ -1,4 +1,4 @@
-namespace util-ext/grep
+namespace util-ext
 
 ## IMPORT ##
 # ------------------------ #

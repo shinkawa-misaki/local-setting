@@ -1,7 +1,4 @@
-#!/usr/bin/env bash
-set -e
-
-namespace util-ext/alias
+namespace util-ext
 
 ## IMPORT ##
 # ------------------------ #

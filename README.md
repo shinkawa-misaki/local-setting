@@ -22,6 +22,7 @@ Local environment construction tool by bash-oo-framework
         │   ├── config.sh
         │   ├── database
         │   ├── dockerProject.sh
+        │   ├── env.sh
         │   ├── ssh
         │   ├── tool
         │   │   └── template.sh
@@ -36,9 +37,22 @@ Local environment construction tool by bash-oo-framework
             │   └── type.sh
             └── util_ext
                 ├── alias.sh
+                ├── awk.sh
+                ├── aws.sh
+                ├── chmod.sh
+                ├── convert.sh
+                ├── date.sh
+                ├── docker.sh
+                ├── expect.sh
+                ├── find.sh
+                ├── github.sh
                 ├── grep.sh
+                ├── gsed.sh
+                ├── json.sh
                 ├── log.sh
+                ├── lolcat.sh
                 ├── providers.sh
+                ├── ssh.sh
                 ├── yml.sh
                 └── zsh.sh
 ```
@@ -57,72 +71,3 @@ Local environment construction tool by bash-oo-framework
 </table>
 
 
-
-
-<table>
-<tr>
-<th>
-<details>
-<summary>各ファイルから処理を追う</summary>
-<details>
-<summary>localSetting.sh</summary>
-・src/app/commands/zsh.sh<br>
-・src/app/commands/alias.sh<br>
-・src/app/commands/toolInstall.sh<br>
-・src/app/commands/toolUnInstall.sh<br>
-・src/app/commands/ssh.sh<br>
-・src/app/commands/docker.sh<br>
-・src/app/commands/upgrade.sh<br>
-・src/app/commands/modules/${module}.sh
-</details>
-<details>
-<summary>src/app/commands/modules/${module}.sh</summary>
-・src/app/lib/oo-bootstrap.sh<br>
-・src/app/lib/util/type.sh<br>
-・src/app/lib/util/exception.sh<br>
-・src/app/lib/util_ext/log.sh<br>
-・src/app/helpers/tool/template.sh<br>
-・src/app/helpers/dockerProject.sh
-</details>
-<details>
-<summary>src/app/lib/helpers/tool/template.sh</summary>
-・src/app/lib/util_ext/zsh.sh<br>
-・src/app/helpers/tool/common.sh
-</details>
-<details>
-<summary>src/app/helpers/dockerProject.sh</summary>
-・src/app/lib/util/class.sh<br>
-・src/app/lib/util_ext/log.sh<br>
-・src/app/lib/util_ext/docker.sh<br>
-・src/app/lib/util_ext/providers.sh<br>
-・src/app/helpers/yml.sh<br>
-・src/app/helpers/env.sh<br>
-・src/app/helpers/alias.sh<br>
-・src/app/helpers/github.sh<br>
-・src/app/helpers/docker.sh<br>
-・src/app/helpers/config.sh
-</details>
-<details>
-<summary>src/app/helpers/yml.sh</summary>
-・src/app/lib/util/class.sh<br>
-・src/app/lib/util_ext/log.sh<br>
-・src/app/lib/util_ext/yml.sh<br>
-・src/app/lib/util_ext/grep.sh<br>
-・src/app/helpers/config.sh<br>
-・src/app/lib/util_ext/providers.sh
-</details>
-<details>
-<summary>src/app/helpers/env.sh</summary>
-・src/app/helpers/config.sh<br>
-・src/app/lib/util_ext/log.sh<br>
-・src/app/lib/util/class.sh<br>
-・src/app/lib/util_ext/aws.sh<br>
-・src/app/lib/util_ext/providers.sh
-・src/app/lib/util_ext/data.sh<br>
-・src/app/lib/util_ext/json.sh<br>
-・src/app/lib/util_ext/grep.sh<br>
-・src/app/lib/util_ext/gsed.sh<br>
-</details>
-</details>
-</tr>
-</table>
