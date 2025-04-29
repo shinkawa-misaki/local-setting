@@ -47,6 +47,19 @@ Local environment construction tool by bash-oo-framework
     │       │   ├── List.sh
     │       │   └── Reverse.sh
     │       ├── oo-bootstrap.sh # フレームワークの“起動”と“名前空間管理”を担うコアスクリプト
+    │       ├── String # 文字列ユーティリティ
+    │       │   ├── GetSpaces.sh
+    │       │   ├── IsNumber.sh
+    │       │   ├── SanitizeForVariable.sh
+    │       │   ├── SlashReplacement.sh
+    │       │   └── UUID.sh
+    │       ├── TypePrimitives # 現在どこからも参照されていない開発中
+    │       │   ├── array.sh
+    │       │   ├── boolean.sh
+    │       │   ├── integer.sh
+    │       │   ├── map.sh
+    │       │   └── string.sh
+    │       ├── UI # コンソール出力の整形や色付け、ウィジェット表示など、ユーザーインターフェース関連
     │       ├── util # フレームワークの“土台”として、他モジュールから多用される
     │       │   ├── bash4.sh
     │       │   ├── class.sh
@@ -60,7 +73,7 @@ Local environment construction tool by bash-oo-framework
     │       │   ├── tryCatch.sh
     │       │   ├── type.sh
     │       │   └── variable.sh
-    │       └── util_ext # util の、"より具体的なコマンドラッパー群"
+    │       └── util_ext # util/ をベースに、awk・grep・gitHub・docker・ssh など外部ツールとの連携を容易にするラッパー集
     │           ├── alias.sh
     │           ├── awk.sh
     │           ├── aws.sh
@@ -80,95 +93,9 @@ Local environment construction tool by bash-oo-framework
     │           ├── ssh.sh
     │           ├── yml.sh
     │           └── zsh.sh
-    ├── config
-    └── resource
+    ├── config # プロジェクト全体で共通して使う設定ファイル
+    └── resource # ASCII アート、テンプレートファイル、アイコン、証明書など、静的なリソースを保管
     
-.
-├── localSetting.sh
-├── README.md
-└── src
-    ├── app
-    │   ├── commands
-    │   │   ├── alias.sh
-    │   │   ├── docker.sh
-    │   │   ├── modules
-    │   │   │   └── template.sh
-    │   │   ├── ssh.sh
-    │   │   ├── toolInstall.sh
-    │   │   ├── toolUninstall.sh
-    │   │   ├── upgrade.sh
-    │   │   └── zsh.sh
-    │   ├── helpers
-    │   │   ├── alias.sh
-    │   │   ├── config.sh
-    │   │   ├── database
-    │   │   │   └── common.sh
-    │   │   ├── docker.sh
-    │   │   ├── dockerProject.sh
-    │   │   ├── env.sh
-    │   │   ├── github.sh
-    │   │   ├── patch.sh
-    │   │   ├── spinner.sh
-    │   │   ├── ssh
-    │   │   │   ├── aws.sh
-    │   │   │   ├── common.sh
-    │   │   │   └── github.sh
-    │   │   ├── tool
-    │   │   │   ├── common.sh
-    │   │   │   └── template.sh
-    │   │   ├── yml.sh
-    │   │   └── zsh.sh
-    │   └── lib
-    │       ├── Array
-    │       │   ├── Contains.sh
-    │       │   ├── Intersect.sh
-    │       │   ├── List.sh
-    │       │   └── Reverse.sh
-    │       ├── oo-bootstrap.sh
-    │       ├── String
-    │       │   ├── GetSpaces.sh
-    │       │   ├── IsNumber.sh
-    │       │   ├── SanitizeForVariable.sh
-    │       │   ├── SlashReplacement.sh
-    │       │   └── UUID.sh
-    │       ├── TypePrimitives
-    │       ├── UI
-    │       ├── util
-    │       │   ├── bash4.sh
-    │       │   ├── class.sh
-    │       │   ├── command.sh
-    │       │   ├── exception.sh
-    │       │   ├── exist.sh
-    │       │   ├── log.sh
-    │       │   ├── namedParameters.sh
-    │       │   ├── pipe.sh
-    │       │   ├── test.sh
-    │       │   ├── tryCatch.sh
-    │       │   ├── type.sh
-    │       │   └── variable.sh
-    │       └── util_ext
-    │           ├── alias.sh
-    │           ├── awk.sh
-    │           ├── aws.sh
-    │           ├── chmod.sh
-    │           ├── convert.sh
-    │           ├── date.sh
-    │           ├── docker.sh
-    │           ├── expect.sh
-    │           ├── find.sh
-    │           ├── github.sh
-    │           ├── grep.sh
-    │           ├── gsed.sh
-    │           ├── json.sh
-    │           ├── log.sh
-    │           ├── lolcat.sh
-    │           ├── providers.sh
-    │           ├── ssh.sh
-    │           ├── yml.sh
-    │           └── zsh.sh
-    ├── config
-    └── resource
-
 ```
 </details>
 
@@ -185,5 +112,3 @@ Local environment construction tool by bash-oo-framework
 </table>
 
 dockerの構築ができればOK
-
-
