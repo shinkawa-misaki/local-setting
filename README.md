@@ -4,11 +4,11 @@ Local environment construction tool by bash-oo-framework
 # 構成
 ``` 
 .
-├── localSetting.sh
+├── localSetting.sh # 固有の設定をまとめたファイル
 ├── README.md
 └── src
     └── app
-        ├── commands
+        ├── commands # 直接呼び出す“コマンド群”をまとめた場所
         │   ├── alias.sh
         │   ├── docker.sh
         │   ├── modules
@@ -18,7 +18,7 @@ Local environment construction tool by bash-oo-framework
         │   ├── toolUninstall.sh
         │   ├── upgrade.sh
         │   └── zsh.sh
-        ├── helpers
+        ├── helpers # 汎用的かつ再利用性の高い“補助スクリプト”
         │   ├── config.sh
         │   ├── database
         │   ├── dockerProject.sh
@@ -27,14 +27,14 @@ Local environment construction tool by bash-oo-framework
         │   ├── tool
         │   │   └── template.sh
         │   └── yml.sh
-        └── lib
-            ├── Array  # 配列操作のための専用ユーティリティ群をまとめた場所
+        └── lib # フレームワーク本体およびその拡張モジュールをまとめた場所
+            ├── Array  # 配列操作に特化したユーティリティ群
             │   ├── Contains.sh
             │   ├── Intersect.sh
             │   ├── List.sh
             │   └── Reverse.sh
-            ├── oo-bootstrap.sh
-            ├── util
+            ├── oo-bootstrap.sh # フレームワークの“起動”と“名前空間管理”を担うコアスクリプト
+            ├── util # フレームワークの“土台”として、他モジュールから多用される
             │   ├── bash4.sh
             │   ├── class.sh
             │   ├── command.sh
@@ -47,7 +47,7 @@ Local environment construction tool by bash-oo-framework
             │   ├── tryCatch.sh
             │   ├── type.sh
             │   └── variable.sh
-            └── util_ext
+            └── util_ext # util の、"より具体的なコマンドラッパー群"
                 ├── alias.sh
                 ├── awk.sh
                 ├── aws.sh
@@ -83,12 +83,4 @@ Local environment construction tool by bash-oo-framework
 </tr>
 </table>
 
-作業メモ：
-local-setting/src/app/helpers/
-alias.sh
-docker.sh
-github.sh
-patch.sh
-spinner.sh
-zsh.sh
 
