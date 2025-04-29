@@ -1,7 +1,9 @@
 # local-setting
 Local environment construction tool by bash-oo-framework
 
-# 構成
+<details>
+<summary>構成</summary>
+
 ``` 
 .
 ├── localSetting.sh # 固有の設定をまとめたファイル
@@ -168,7 +170,7 @@ Local environment construction tool by bash-oo-framework
     └── resource
 
 ```
-
+</details>
 
 <table>
 <tr>
