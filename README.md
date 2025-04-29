@@ -29,7 +29,10 @@ Local environment construction tool by bash-oo-framework
         │   └── yml.sh
         └── lib
             ├── Array
-            │   └── Contains.sh
+            │   ├── Contains.sh
+            │   ├── Intersect.sh
+            │   ├── List.sh
+            │   └── Reverse.sh
             ├── oo-bootstrap.sh
             ├── util
             │   ├── bash4.sh
@@ -64,6 +67,7 @@ Local environment construction tool by bash-oo-framework
                 ├── ssh.sh
                 ├── yml.sh
                 └── zsh.sh
+
 ```
 
 
@@ -80,4 +84,4 @@ Local environment construction tool by bash-oo-framework
 </table>
 
 作業メモ：
-util/確認終了
+local-setting/src/app/lib/Array/

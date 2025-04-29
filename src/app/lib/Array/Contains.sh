@@ -1,3 +1,5 @@
+namespace Array
+
 Array::Contains() {
   local element
   for element in "${@:2}"　# 第2引数以降（検索対象の配列）をループ
