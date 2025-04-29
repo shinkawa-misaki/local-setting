@@ -28,7 +28,7 @@ Local environment construction tool by bash-oo-framework
         │   │   └── template.sh
         │   └── yml.sh
         └── lib
-            ├── Array
+            ├── Array  # 配列操作のための専用ユーティリティ群をまとめた場所
             │   ├── Contains.sh
             │   ├── Intersect.sh
             │   ├── List.sh
@@ -84,4 +84,11 @@ Local environment construction tool by bash-oo-framework
 </table>
 
 作業メモ：
-local-setting/src/app/lib/Array/
+local-setting/src/app/helpers/
+alias.sh
+docker.sh
+github.sh
+patch.sh
+spinner.sh
+zsh.sh
+

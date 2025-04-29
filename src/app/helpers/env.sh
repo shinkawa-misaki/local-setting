@@ -5,12 +5,12 @@ set -e
 # 必要なユーティリティを読み込む
 # ------------------------ #
 import util/class
-import util-ext/log
-import util-ext/aws
-import util-ext/date
-import util-ext/json
+import util_ext/log
+import util_ext/aws
+import util_ext/date
+import util_ext/json
 import helpers/config
-import util-ext/providers
+import util_ext/providers
 
 ## MAIN ##
 # ------------------------ #

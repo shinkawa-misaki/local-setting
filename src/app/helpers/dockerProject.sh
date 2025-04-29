@@ -4,9 +4,9 @@ set -e
 ## IMPORT ##
 # ------------------------ #
 import util/class
-import util-ume/log
-import util-ume/docker
-import util-ume/providers
+import util_ext/log
+import util_ext/docker
+import util_ext/providers
 import helpers/yml
 import helpers/env
 import helpers/alias

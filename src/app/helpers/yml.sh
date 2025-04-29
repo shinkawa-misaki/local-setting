@@ -4,11 +4,11 @@ set -e
 ## IMPORT ##
 # ------------------------ #
 import util/class
-import util-ext/log
-import util-ext/yml
-import util-ext/grep
+import util_ext/log
+import util_ext/yml
+import util_ext/grep
 import helpers/config
-import util-ext/providers
+import util_ext/providers
 
 ## MAIN ##
 # ------------------------ #
