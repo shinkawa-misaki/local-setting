@@ -190,6 +190,7 @@ Local environment construction tool by bash-oo-framework
     │           ├── yml.sh
     │           └── zsh.sh
     ├── config
+    │   └── template.json
     └── resource
 ```
 </details>

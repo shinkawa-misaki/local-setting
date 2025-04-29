@@ -1,0 +1,56 @@
+{
+  "git": {
+    "remote_domain": "template.git",
+    "remote_branch": "dev",
+    "skip": {
+      "dir": "",
+      "target_list": [
+        "docker/.env",
+        "docker/docker-compose.yml"
+      ]
+    }
+  },
+  "docker": {
+    "domain": "template",
+    "dir": {
+      "default": "docker",
+      "yml": "docker",
+      "archive": "src/app",
+      "deploy": {
+        "repository": "src",
+        "container": "app/"
+      }
+    },
+    "shell_type": "/bin/sh",
+    "env": {
+      "TEMPLATE_HTTP_PORT": 8000,
+      "TEMPLATE_DB_PORT": 3406
+    },
+    "config": {
+      "app_port": "TEMPLATE_HTTP_PORT",
+      "db_port": "TEMPLATE_DB_PORT"
+    },
+    "local": [
+      {
+        "end_point": "http://localhost:8000",
+        "response_code": 404
+      }
+    ]
+  },
+  "database": {
+    "default": {
+      "root": {
+        "user": "root",
+        "password": "root"
+      },
+      "admin": {
+        "user": "admin",
+        "password": "admin"
+      },
+      "host": "db",
+      "using": "template",
+      "charset": "utf8mb4",
+      "collation": "utf8mb4_unicode_ci"
+    }
+  }
+}
