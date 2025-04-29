@@ -14,7 +14,7 @@ Local environment construction tool by bash-oo-framework
     │   │   ├── alias.sh
     │   │   ├── docker.sh
     │   │   ├── modules
-    │   │   │   └── template.sh
+    │   │   │   └── template.sh # 機能単位のスクリプト群
     │   │   ├── ssh.sh
     │   │   ├── toolInstall.sh
     │   │   ├── toolUninstall.sh
@@ -24,7 +24,7 @@ Local environment construction tool by bash-oo-framework
     │   │   ├── alias.sh
     │   │   ├── config.sh
     │   │   ├── database
-    │   │   │   └── common.sh
+    │   │   │   └── common.sh # データベース接続やマイグレーション等、DB 周りの共通処理。
     │   │   ├── docker.sh
     │   │   ├── dockerProject.sh
     │   │   ├── env.sh
@@ -32,10 +32,10 @@ Local environment construction tool by bash-oo-framework
     │   │   ├── patch.sh
     │   │   ├── spinner.sh
     │   │   ├── ssh
-    │   │   │   ├── aws.sh
-    │   │   │   ├── common.sh
-    │   │   │   └── github.sh
-    │   │   ├── tool
+    │   │   │   ├── aws.sh # AWS 用 SSH 設定生成
+    │   │   │   ├── common.sh # SSH 共通フック
+    │   │   │   └── github.sh # GitHub SSH キー管理
+    │   │   ├── tool # ツール導入テンプレートや汎用処理
     │   │   │   ├── common.sh
     │   │   │   └── template.sh
     │   │   ├── yml.sh
