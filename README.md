@@ -207,6 +207,17 @@ Local environment construction tool by bash-oo-framework
 </tr>
 </table>
 
-dockerの構築ができればOK
-
-touch {Color,Color.var,Console,Cursor}.sh
+<table>
+<tr>
+<th colspan="2">作業用メモ</th>
+</tr>
+<tr>
+<th>src/resource/aws/</th><th>このファイル内必要なし</th>
+</tr>
+<tr>
+<th>必要最低限の機能</th><th>dockerの構築ができればOK</th>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
