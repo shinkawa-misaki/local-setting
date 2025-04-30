@@ -192,6 +192,30 @@ Local environment construction tool by bash-oo-framework
     ├── config
     │   └── template.json
     └── resource
+        ├── alias
+        │   └── base.sh
+        ├── aws
+        │   ├── config.ini
+        │   └── credentials.ini
+        ├── docker
+        │   └── scripts
+        │       └── laravel
+        │           ├── init-env-local.sh
+        │           └── init-local.sh
+        ├── modules
+        │   ├── ascii.text
+        │   ├── hooks
+        │   │   ├── pre-commit
+        │   │   └── pre-push
+        │   └── server
+        │       └── local
+        │           └── redis
+        ├── ssh
+        │   └── conf.d
+        │       ├── default-config
+        │       └── github.conf
+        └── zsh
+        
 ```
 </details>
 
