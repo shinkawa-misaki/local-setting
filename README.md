@@ -2,220 +2,40 @@
 Local environment construction tool by bash-oo-framework
 
 <details>
-<summary>構成</summary>
+<summary>確認した構成</summary>
 
 ``` 
-.
-├── localSetting.sh # 固有の設定をまとめたファイル
-├── README.md
-└── src
-    ├── app
-    │   ├── commands # 直接呼び出す“コマンド群”をまとめた場所
-    │   │   ├── alias.sh
-    │   │   ├── docker.sh
-    │   │   ├── modules
-    │   │   │   └── template.sh # 機能単位のスクリプト群
-    │   │   ├── ssh.sh
-    │   │   ├── toolInstall.sh
-    │   │   ├── toolUninstall.sh
-    │   │   ├── upgrade.sh
-    │   │   └── zsh.sh
-    │   ├── helpers # 汎用的かつ再利用性の高い“補助スクリプト”
-    │   │   ├── alias.sh
-    │   │   ├── config.sh
-    │   │   ├── database
-    │   │   │   └── common.sh # データベース接続やマイグレーション等、DB 周りの共通処理。
-    │   │   ├── docker.sh
-    │   │   ├── dockerProject.sh
-    │   │   ├── env.sh
-    │   │   ├── github.sh
-    │   │   ├── patch.sh
-    │   │   ├── spinner.sh
-    │   │   ├── ssh
-    │   │   │   ├── aws.sh # AWS 用 SSH 設定生成
-    │   │   │   ├── common.sh # SSH 共通フック
-    │   │   │   └── github.sh # GitHub SSH キー管理
-    │   │   ├── tool # ツール導入テンプレートや汎用処理
-    │   │   │   ├── common.sh
-    │   │   │   └── template.sh
-    │   │   ├── yml.sh
-    │   │   └── zsh.sh
-    │   └── lib # フレームワーク本体およびその拡張モジュールをまとめた場所
-    │       ├── Array # 配列操作に特化したユーティリティ群
-    │       │   ├── Contains.sh
-    │       │   ├── Intersect.sh
-    │       │   ├── List.sh
-    │       │   └── Reverse.sh
-    │       ├── oo-bootstrap.sh # フレームワークの“起動”と“名前空間管理”を担うコアスクリプト
-    │       ├── String # 文字列ユーティリティ
-    │       │   ├── GetSpaces.sh
-    │       │   ├── IsNumber.sh
-    │       │   ├── SanitizeForVariable.sh
-    │       │   ├── SlashReplacement.sh
-    │       │   └── UUID.sh
-    │       ├── TypePrimitives # 現在どこからも参照されていない開発中
-    │       │   ├── array.sh
-    │       │   ├── boolean.sh
-    │       │   ├── integer.sh
-    │       │   ├── map.sh
-    │       │   └── string.sh
-    │       ├── UI # コンソール出力の整形や色付け、ウィジェット表示など、ユーザーインターフェース関連
-    │       ├── util # フレームワークの“土台”として、他モジュールから多用される
-    │       │   ├── bash4.sh
-    │       │   ├── class.sh
-    │       │   ├── command.sh
-    │       │   ├── exception.sh
-    │       │   ├── exist.sh
-    │       │   ├── log.sh
-    │       │   ├── namedParameters.sh
-    │       │   ├── pipe.sh
-    │       │   ├── test.sh
-    │       │   ├── tryCatch.sh
-    │       │   ├── type.sh
-    │       │   └── variable.sh
-    │       └── util_ext # util/ をベースに、awk・grep・gitHub・docker・ssh など外部ツールとの連携を容易にするラッパー集
-    │           ├── alias.sh
-    │           ├── awk.sh
-    │           ├── aws.sh
-    │           ├── chmod.sh
-    │           ├── convert.sh
-    │           ├── date.sh
-    │           ├── docker.sh
-    │           ├── expect.sh
-    │           ├── find.sh
-    │           ├── github.sh
-    │           ├── grep.sh
-    │           ├── gsed.sh
-    │           ├── json.sh
-    │           ├── log.sh
-    │           ├── lolcat.sh
-    │           ├── providers.sh
-    │           ├── ssh.sh
-    │           ├── yml.sh
-    │           └── zsh.sh
-    ├── config # プロジェクト全体で共通して使う設定ファイル
-    └── resource # ASCII アート、テンプレートファイル、アイコン、証明書など、静的なリソースを保管
-    
-    
-.
-├── localSetting.sh
-├── README.md
-└── src
-    ├── app
-    │   ├── commands
-    │   │   ├── alias.sh
-    │   │   ├── docker.sh
-    │   │   ├── modules
-    │   │   │   └── template.sh
-    │   │   ├── ssh.sh
-    │   │   ├── toolInstall.sh
-    │   │   ├── toolUninstall.sh
-    │   │   ├── upgrade.sh
-    │   │   └── zsh.sh
-    │   ├── helpers
-    │   │   ├── alias.sh
-    │   │   ├── config.sh
-    │   │   ├── database
-    │   │   │   └── common.sh
-    │   │   ├── docker.sh
-    │   │   ├── dockerProject.sh
-    │   │   ├── env.sh
-    │   │   ├── github.sh
-    │   │   ├── patch.sh
-    │   │   ├── spinner.sh
-    │   │   ├── ssh
-    │   │   │   ├── aws.sh
-    │   │   │   ├── common.sh
-    │   │   │   └── github.sh
-    │   │   ├── tool
-    │   │   │   ├── common.sh
-    │   │   │   └── template.sh
-    │   │   ├── yml.sh
-    │   │   └── zsh.sh
-    │   └── lib
-    │       ├── Array
-    │       │   ├── Contains.sh
-    │       │   ├── Intersect.sh
-    │       │   ├── List.sh
-    │       │   └── Reverse.sh
-    │       ├── oo-bootstrap.sh
-    │       ├── String
-    │       │   ├── GetSpaces.sh
-    │       │   ├── IsNumber.sh
-    │       │   ├── SanitizeForVariable.sh
-    │       │   ├── SlashReplacement.sh
-    │       │   └── UUID.sh
-    │       ├── TypePrimitives
-    │       │   ├── array.sh
-    │       │   ├── boolean.sh
-    │       │   ├── integer.sh
-    │       │   ├── map.sh
-    │       │   └── string.sh
-    │       ├── UI
-    │       │   ├── Color.sh
-    │       │   ├── Color.var.sh
-    │       │   ├── Console.sh
-    │       │   └── Cursor.sh
-    │       ├── util
-    │       │   ├── bash4.sh
-    │       │   ├── class.sh
-    │       │   ├── command.sh
-    │       │   ├── exception.sh
-    │       │   ├── exist.sh
-    │       │   ├── log.sh
-    │       │   ├── namedParameters.sh
-    │       │   ├── pipe.sh
-    │       │   ├── test.sh
-    │       │   ├── tryCatch.sh
-    │       │   ├── type.sh
-    │       │   └── variable.sh
-    │       └── util_ext
-    │           ├── alias.sh
-    │           ├── awk.sh
-    │           ├── aws.sh
-    │           ├── chmod.sh
-    │           ├── convert.sh
-    │           ├── date.sh
-    │           ├── docker.sh
-    │           ├── expect.sh
-    │           ├── find.sh
-    │           ├── github.sh
-    │           ├── grep.sh
-    │           ├── gsed.sh
-    │           ├── json.sh
-    │           ├── log.sh
-    │           ├── lolcat.sh
-    │           ├── providers.sh
-    │           ├── ssh.sh
-    │           ├── yml.sh
-    │           └── zsh.sh
-    ├── config
-    │   └── template.json
-    └── resource
-        ├── alias
-        │   └── base.sh
-        ├── aws
-        │   ├── config.ini
-        │   └── credentials.ini
-        ├── docker
-        │   └── scripts
-        │       └── laravel
-        │           ├── init-env-local.sh
-        │           └── init-local.sh
-        ├── modules
-        │   ├── ascii.text
-        │   ├── hooks
-        │   │   ├── pre-commit
-        │   │   └── pre-push
-        │   └── server
-        │       └── local
-        │           └── redis
-        ├── ssh
-        │   └── conf.d
-        │       ├── default-config
-        │       └── github.conf
-        └── zsh
-        
+./localSetting.sh  # OK!
+
+./src/app/commands/modules     # OK！
+./src/app/commands/
+
+./src/app/helpers/database/    # OK！
+./src/app/helpers/ssh/         # OK！
+./src/app/helpers/tool/        # OK！
+./src/app/helpers/             # OK!
+
+./src/app/lib/Array/           # OK!
+./src/app/lib/String/          # OK!
+./src/app/lib/TypePrimitives/  # OK!
+./src/app/lib/UI/              # OK!
+./src/app/lib/util/            # OK!
+./src/app/lib/util_ext/        # OK!
+./src/app/lib/                 # OK!
+
+./src/config/                   # OK!
+
+./src/resource/alias/           # OK!
+./src/resource/aws/             # OK!
+./src/resource/docker/          # OK!
+./src/resource/modules/template/hools/   # OK!
+./src/resource/modules/template/server/  # OK!
+./src/resource/modules/template/         # OK!
+
+./src/resource/ssh/conf.d       # OK!
+./src/resource/zsh/
+
+
 ```
 </details>
 
@@ -228,20 +48,5 @@ Local environment construction tool by bash-oo-framework
 ・ trace_and_tweak
 </details>
 </th>
-</tr>
-</table>
-
-<table>
-<tr>
-<th colspan="2">作業用メモ</th>
-</tr>
-<tr>
-<th>src/resource/aws/</th><th>このファイル内必要なし</th>
-</tr>
-<tr>
-<th>必要最低限の機能</th><th>dockerの構築ができればOK</th>
-</tr>
-<tr>
-<th></th>
 </tr>
 </table>
