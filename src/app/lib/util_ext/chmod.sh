@@ -1,9 +1,9 @@
-namespace util-ext/chmod
+namespace util_ext/chmod
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/find
-import util-ext/log
+import util_ext/find
+import util_ext/log
 
 ## MAIN ##
 # ------------------------ #

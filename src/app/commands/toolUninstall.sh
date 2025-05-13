@@ -10,7 +10,7 @@ namespace commands
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/zsh
+import util_ext/zsh
 import helpers/tool
 
 ## DECLARATION ##

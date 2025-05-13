@@ -1,9 +1,9 @@
-namespace util-ext
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/log
-import util-ext/gsed　# 正規表現エスケープ用の gsed を利用
+import util_ext/log
+import util_ext/gsed　# 正規表現エスケープ用の gsed を利用
 
 ## MAIN ##
 # ------------------------ #

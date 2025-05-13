@@ -1,4 +1,4 @@
-namespace util-ext/awk
+namespace util_ext/awk
 
 ## IMPORT ##
 # ------------------------ #

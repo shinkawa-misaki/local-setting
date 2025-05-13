@@ -14,10 +14,10 @@ namespace commands
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/log
-import util-ume/zsh
-import util-ume/chmod
-import util-ume/providers
+import util_ext/log
+import util_ext/zsh
+import util_ext/chmod
+import util_ext/providers
 import helpers/zsh
 
 ## DECLARATION ##

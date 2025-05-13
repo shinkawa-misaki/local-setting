@@ -2,7 +2,7 @@ namespace helpers/tool
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/zsh
+import util_ext/zsh
 import helpers/tool/common
 
 ## DECLARATION ##

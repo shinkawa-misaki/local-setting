@@ -1,10 +1,10 @@
-namespace util-ext
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #
 import util/type
-import util-ext/expect
-import util-ext/log
+import util_ext/expect
+import util_ext/log
 
 ## MAIN ##
 # ------------------------ #

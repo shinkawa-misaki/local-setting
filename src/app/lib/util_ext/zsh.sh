@@ -1,10 +1,10 @@
-namespace util-ext
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/log
-import util-ext/grep
-import util-ext/gsed
+import util_ext/log
+import util_ext/grep
+import util_ext/gsed
 
 ## MAIN ##
 # ------------------------ #

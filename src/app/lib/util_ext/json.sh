@@ -1,8 +1,8 @@
-namespace util-ext
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/log
+import util_ext/log
 
 ## MAIN ##
 # ------------------------ #

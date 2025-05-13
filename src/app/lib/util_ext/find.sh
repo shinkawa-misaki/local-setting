@@ -1,4 +1,4 @@
-namespace util-ext
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #

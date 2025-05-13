@@ -10,10 +10,10 @@ namespace commands
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/log
-import util-ume/zsh
-import util-ume/alias
-import util-ume/providers
+import util_ext/log
+import util_ext/zsh
+import util_ext/alias
+import util_ext/providers
 
 ## DECLARATION ##
 # ------------------------ #

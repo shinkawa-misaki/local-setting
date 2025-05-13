@@ -9,11 +9,11 @@ namespace commands
 ## IMPORT ##
 # ------------------------ #
 import util/type
-import util-ume/json
-import util-ume/gsed
+import util_ext/json
+import util_ext/gsed
 import util/exception
-import util-ume/lolcat
-import util-ume/providers
+import util_ext/lolcat
+import util_ext/providers
 import helpers/ssh
 
 ## DECLARATION ##

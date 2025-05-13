@@ -16,10 +16,10 @@ namespace command
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/zsh
-import util-ume/gsed
-import util-ume/json
-import util-ume/providers
+import util_ext/zsh
+import util_ext/gsed
+import util_ext/json
+import util_ext/providers
 import helpers/tool/common
 
 ## DECLARATION ##

@@ -1,13 +1,13 @@
-namespace util-ext
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/log
-import util-ext/gsed       # 正規表現＆文字列操作
-import util-ext/json
-import util-ext/chmod
-import util-ext/expect
-import util-ext/providers
+import util_ext/log
+import util_ext/gsed       # 正規表現＆文字列操作
+import util_ext/json
+import util_ext/chmod
+import util_ext/expect
+import util_ext/providers
 
 ## MAIN ##
 # ------------------------ #
