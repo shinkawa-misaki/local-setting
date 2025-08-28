@@ -1,48 +1,36 @@
 #!/usr/bin/env bash
 set -e
 
-# =================================
-# プロジェクトの初期化・更新・削除を実行
-# =================================
-
-## BOOTSTRAP ##
 source "$LOCAL_SETTING/src/app/lib/oo-bootstrap.sh"
 basename commands_modules
 
-## MAIN ##
 import util/type
 import util/exception
 import util-ext/log
 import helpers/tool/template
 import helpers/dockerProject
-# ------------------------ #
 
-## DECLARATION ##
-# DockerProjectオブジェクトを生成し、各種設定をグローバル変数に取得
+
 DockerProject setting && $var:setting __constructor__ "$(basename ${BASH_SOURCE[0]#/*} .sh)"
 string -g project_domain="$($var:setting GetProjectDomain)"
 string -g project_dir="$($var:setting GetProjectDir)"
 string -g docker_dir="$($var:setting GetDockerDir)"
 string -g docker_domain="$($var:setting GetDockerDomain)"
 
-# 環境構築
-# ASCII アートを表示
 function printAscii() {
   lolcat --speed=5 --spread=1.5 --seed=140 \
     "$(resourceModules)/$(basename "${BASH_SOURCE[0]#/*}" .sh)/ascii.text"
 }
 
-# 初期化前の共通セットアップ
 function setUP() {
   toolTemplateInstall
 }
 
-# 最後にアートを表示
 function setDown() {
   printAscii
 }
 
-# 完全なる初期化
+
 function init() {
   echo "init start"
   setUP
@@ -60,7 +48,7 @@ function init() {
   setDown
 }
 
-# 部分更新
+
 function update() {
   setUP
   $var:setting DeployLocalSrcFile
