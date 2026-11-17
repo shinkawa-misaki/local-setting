@@ -39,9 +39,9 @@ class::YmlCommon() {
     local yml_path_list=( $(this yml_config GetKeys "path") )
 
     for target in "${!yml_path_list[@]}"; do
-      outputStartLog "yml_path; $(this yml_config Get "path.${target}"
+      outputStartLog "yml_path; $(this yml_config Get "path.${target}")"
       this yml_path = "$(this yml_dir)/$(this yml_config Get "path.${target}")"
-      outputResultLog $? "yml_path; $(this yml_config Get "path.${target}"
+      outputResultLog $? "yml_path; $(this yml_config Get "path.${target}")"
       # ローカル設定値をYMLに設定
       this SetKeyValueOfConfig "$target"
     done

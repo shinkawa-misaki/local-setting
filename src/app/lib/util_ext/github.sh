@@ -11,7 +11,7 @@ namespace util_ext
 GitHub::CloneProject() {
   local branch="$1"
   local domain="$2"
-  shift; shift;　# ２回連続で位置パラメーターをずらす
+  shift; shift; # ２回連続で位置パラメーターをずらす
 
   # 追加の引数がない場合は単純にクローンを実行する
   if [[ ${#@} -eq 0 ]]; then

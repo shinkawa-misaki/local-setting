@@ -30,7 +30,7 @@ class:Test() {
     [[ $printInPlace == true ]] && this onStartCursor restore
 
     # シンボル／色／ラベルをそれぞれ変数化
-    local sym  ="$(UI.Color.Green)$(UI.Powerline.OK)"
+    local sym="$(UI.Color.Green)$(UI.Powerline.OK)"
     local label="$(UI.Color.Yellow)[ $(UI.Color.Green)$(UI.Color.Bold)OK$(UI.Color.NoBold) $(UI.Color.Yellow)]"
     local reset="$(UI.Color.Default)"
 
@@ -48,28 +48,27 @@ class:Test() {
     [string] line
     [string] error
     [string] source
-    local sym    ="$(UI.Color.Red)$(UI.Powerline.Fail)"
-    local label  ="$(UI.Color.Yellow)[$(UI.Color.Red)$(UI.Color.Bold)FAIL$(UI.Color.NoBold)$(UI.Color.Yellow)]"
-    local loc    ="in $(UI.Color.Yellow)${source}$(UI.Color.Default):$(UI.Color.Blue)${line}$(UI.Color.Default)"
-    local arrow  ="$(UI.Powerline.RefersTo)"
+    local sym="$(UI.Color.Red)$(UI.Powerline.Fail)"
+    local label="$(UI.Color.Yellow)[$(UI.Color.Red)$(UI.Color.Bold)FAIL$(UI.Color.NoBold)$(UI.Color.Yellow)]"
+    local loc="in $(UI.Color.Yellow)${source}$(UI.Color.Default):$(UI.Color.Blue)${line}$(UI.Color.Default)"
+    local arrow="$(UI.Powerline.RefersTo)"
 
     echo "${sym} ${label} ${loc} ${arrow} $(UI.Color.Red)${error}$(UI.Color.Default)"
     @return
-      }
   }
 
   # テストグループ終了時に結果サマリを出力
   Test.DisplaySummary() {
     # 共通パーツを変数にまとめる
-    local arrow  ="$(UI.Powerline.ArrowLeft)"
-    local grp    ="$(UI.Color.White)$(this groupName)"
-    local base   ="$(UI.Color.Magenta)Completed [${grp}$(UI.Color.Magenta)]: $(UI.Color.Default)"
+    local arrow="$(UI.Powerline.ArrowLeft)"
+    local grp="$(UI.Color.White)$(this groupName)"
+    local base="$(UI.Color.Magenta)Completed [${grp}$(UI.Color.Magenta)]: $(UI.Color.Default)"
 
     if [[ $(this errors) == true ]]; then
-      local status ="$(UI.Color.Red)There were errors $(UI.Color.Default)$(UI.Powerline.Lightning)"
+      local status="$(UI.Color.Red)There were errors $(UI.Color.Default)$(UI.Powerline.Lightning)"
       this errors = false           # フラグをリセット
     else
-      local status ="$(UI.Color.Yellow)Test group completed successfully $(UI.Color.Default)$(UI.Powerline.ThumbsUp)"
+      local status="$(UI.Color.Yellow)Test group completed successfully $(UI.Color.Default)$(UI.Powerline.ThumbsUp)"
     fi
 
     echo "${arrow} ${base}${status}"
@@ -82,7 +81,7 @@ class:Test() {
     [string] groupName             # グループ名引数
 
     # 表示用パーツに分解して組み立て
-    local arrow ="$(UI.Powerline.ArrowRight)"
+    local arrow="$(UI.Powerline.ArrowRight)"
     local label="$(UI.Color.Magenta)Testing [$(UI.Color.White)${groupName}$(UI.Color.Magenta)]:"
     echo "${arrow} ${label}$(UI.Color.Default)"
 

@@ -48,9 +48,9 @@ function phpenv() {
     local php_dir="$(brew --prefix)/bin/php"
 
     if [[ "$(echo $current_php_version | cut -c 1)" == "8" && -L $php_dir ]]; then
-      (unlink $php_dir && brew unlink php@${target_php_version} && brew link --overwrite php@${target_php_version}) 1&> /dev/null
+      (unlink $php_dir && brew unlink php@${target_php_version} && brew link --overwrite php@${target_php_version}) > /dev/null 2>&1
     else
-      (brew unlink php && brew unlink php@${target_php_version} && brew link --overwrite php@${target_php_version}) 1&> /dev/null
+      (brew unlink php && brew unlink php@${target_php_version} && brew link --overwrite php@${target_php_version}) > /dev/null 2>&1
     fi
   fi
 }

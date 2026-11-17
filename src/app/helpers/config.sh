@@ -36,7 +36,7 @@ class:Config() {
 
     # 拡張子が json と yml のいずれでもない場合はエラーを出力する
     if [[ $(this extension) != "json" && $(this extension) != "yml" ]]; then
-      outputErrorLog "supported　config file is json or yml: $(this default_path)"
+      outputErrorLog "supported config file is json or yml: $(this default_path)"
     fi
 
     this root_key = "$2"

@@ -179,7 +179,7 @@ Type::InjectThisResolutionIfNeeded() {
     return
   fi
 
-　# すでに @resolve:this もしくは同義の __local_return_self_and_result=false が含まれているなら 何もしない。未挿入の場合のみ続行。
+  # すでに @resolve:this もしくは同義の __local_return_self_and_result=false が含まれているなら 何もしない。未挿入の場合のみ続行。
   if [[ "$methodBody" != *'@resolve:this'* && "$methodBody" != *'__local_return_self_and_result=false'* ]]
   then
     DEBUG Log "Injecting @this resolution to: $methodName"
@@ -190,7 +190,7 @@ Type::InjectThisResolutionIfNeeded() {
     if [[ "$methodBody" != *'@return'* ]]
     then
       Function::InjectCode "$methodName" '@resolve:this' '@return'
-    else　
+    else
       Function::InjectCode "$methodName" '@resolve:this'
     fi
   fi
@@ -231,7 +231,7 @@ Type::TrapAndCreate() {
   # 配列の先頭（コマンド名）を取り除き、残りの引数部分 を次の処理へ渡す準備を整える。
   shift
 
-　# 特定コマンドの無視
+  # 特定コマンドの無視
   # 次回宣言マーク
   # 変数宣言部の抽出
   # ??
@@ -254,7 +254,7 @@ Type::TrapAndCreate() {
   then
     varDeclaration="${commandWithArgs[*]:2}"
   fi
-  local varName="${varDeclaration%%=*}"　　# 変数名を抽出
+  local varName="${varDeclaration%%=*}" # 変数名を抽出
 
   # var value is only important if making an object later on from it
   local varValue="${varDeclaration#*=}"  # 変数名を抽出

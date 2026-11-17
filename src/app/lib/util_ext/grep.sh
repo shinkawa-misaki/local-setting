@@ -3,7 +3,7 @@ namespace util_ext
 ## IMPORT ##
 # ------------------------ #
 import util_ext/log
-import util_ext/gsed　# 正規表現エスケープ用の gsed を利用
+import util_ext/gsed # 正規表現エスケープ用の gsed を利用
 
 ## MAIN ##
 # ------------------------ #
@@ -25,7 +25,7 @@ Grep::OfWord() {
   search_word=$(gsEscapeRegex "$search_word")
 
   case $option in
-    "^") echo "$target_word" | grep -E -c "^${search_word}" || [[ $? == 1 ]];;　
+    "^") echo "$target_word" | grep -E -c "^${search_word}" || [[ $? == 1 ]];;
     "$") echo "$target_word" | grep -E -c "${search_word}$" || [[ $? == 1 ]];;
       *) echo "$target_word" | grep -E -c "${search_word}"  || [[ $? == 1 ]];;
   esac
