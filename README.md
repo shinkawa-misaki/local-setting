@@ -124,6 +124,8 @@ local-setting/
 - macOS（Apple Silicon M1/M2/M3 対応）
 - Docker コンテナ環境（Ubuntu 22.04）
 
+**前提**: [Homebrew](https://brew.sh) がインストール済みであること。`gsed`（gnu-sed）がなければ、`localSetting.sh` の初回実行時に自動でインストールされます。
+
 ## 特徴
 
 - **段階的初期化**: `INIT_LOCAL_POINT` による進捗管理で、失敗時にリトライ可能

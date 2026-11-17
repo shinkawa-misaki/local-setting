@@ -143,7 +143,7 @@ function updateModules() {
   if [[ "$is_exist" -ne 0 ]]; then
     eval "$alias_name"
   else
-    echo "update ssh setting is not found ${1}"
+    echo "tool setting is not found ${1}"
   fi
 }
 

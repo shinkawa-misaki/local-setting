@@ -151,6 +151,18 @@ fi
 # 引数が足りなくても set -u で止まらないよう、未指定の引数は空文字として扱う
 declare cmd="${1:-}" target="${2:-}" arg3="${3:-}" arg4="${4:-}"
 
+# gsed（GNU sed）はほぼすべてのサブコマンドで使う。
+# tool の初期化より前の zsh の初期化でも使うため、ここで先に入れておく
+if [[ -n "$cmd" ]] && ! command -v gsed > /dev/null 2>&1; then
+  if command -v brew > /dev/null 2>&1; then
+    echo "gsed が見つからないため、gnu-sed をインストールします"
+    brew install gnu-sed
+  else
+    echo "gsed（gnu-sed）が必要ですが、Homebrew が見つかりません。先に Homebrew をインストールしてください: https://brew.sh" 1>&2
+    exit 1
+  fi
+fi
+
 if [[ "$cmd" == "init" ]]; then
   case "$target" in
     "local" ) initLocal;;
