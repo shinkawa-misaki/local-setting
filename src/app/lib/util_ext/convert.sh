@@ -3,7 +3,7 @@ namespace util_ext
 # no dependencies
 # ------------------------ #
 # 重複読み込み防止用チェック
-if [[ -n "${UTIL_CONVERT_LOADED}" ]]; then
+if [[ -n "${UTIL_CONVERT_LOADED:-}" ]]; then
     return
 fi
 

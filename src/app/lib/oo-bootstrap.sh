@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail  # -u はフレームワークが未定義変数を前提にしているため付けない
 
 #=======================
 # ブートストラップスクリプト

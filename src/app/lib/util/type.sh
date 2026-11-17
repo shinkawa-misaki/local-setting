@@ -266,7 +266,7 @@ Type::TrapAndCreate() {
     local varValue=""
   fi
 
-  if [[ ! -z $__typeCreate_varType ]]  # 型宣言コンテキストの確認
+  if [[ -n "${__typeCreate_varType:-}" ]]  # 型宣言コンテキストの確認
   then
 
     local __primitive_extension_fingerprint__boolean=${__primitive_extension_fingerprint__boolean:-2D6A822E36884C70843578D37E6773C4}
@@ -329,7 +329,7 @@ Type::TrapAndCreate() {
     unset __typeCreate_varValue
   fi
 
-  if [[ "$command" != "declare" || "$__typeCreate_next" != "true" ]]
+  if [[ "$command" != "declare" || "${__typeCreate_next:-}" != "true" ]]
   then
     __typeCreate_normalCodeStarted+=1
 

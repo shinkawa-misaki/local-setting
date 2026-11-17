@@ -2,11 +2,11 @@
 set -e
 
 source "$LOCAL_SETTING/src/app/lib/oo-bootstrap.sh"
-basename commands_modules
+namespace commands/modules
 
 import util/type
 import util/exception
-import util-ext/log
+import util_ext/log
 import helpers/tool/template
 import helpers/dockerProject
 
