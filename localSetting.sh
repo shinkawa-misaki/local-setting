@@ -98,10 +98,10 @@ function initLocal() {
 
 
 function initModules() {
-  local domain="${2}"
+  local domain="${2:-}"
   local module
   module="$(echo "${domain}" | gsed -re 's/.*/\L\0/g; s/(-|_)([a-z0-9])/\U\0/g; s/(-|_)//g;')"
-  shift;shift;
+  set -- "${@:3}"  # 先頭2つ（サブコマンドとドメイン）を外す。引数が足りなくても止まらない
 
   
   if [[ -e "${script_dir}/modules/${module}.sh" ]]; then
@@ -114,10 +114,10 @@ function initModules() {
 
 
 function updateModules() {
-  local domain="${2}"
+  local domain="${2:-}"
   local module
   module="$(echo "${domain}" | gsed -re's/.*/\L\0/g; s/(-|_)([a-z0-9])/\U\0/g; s/(-|_)//g;')"
-  shift;shift;
+  set -- "${@:3}"
   
   if [[ -e "${script_dir}/modules/${module}.sh" ]]; then
     ${script_dir}/modules/${module}.sh update "${@}"
@@ -128,10 +128,10 @@ function updateModules() {
 
 
 function deleteModules() {
-  local domain="$2"
+  local domain="${2:-}"
   local module
   module="$(echo "${domain}" | gsed -re 's/.*/\L\0/g; s/(-|_)([a-z0-9])/\U\0/g; s/(-|_)//g;')"
-  shift;shift;
+  set -- "${@:3}"
 
   if [[ -e "${script_dir}/modules/${module}.sh" ]]; then
     ${script_dir}/modules/${module}.sh delete "${@}"
@@ -140,50 +140,53 @@ function deleteModules() {
   fi
 }
 
-if [[ "$LOCAL_SETTING" == "" ]]; then
+if [[ "${LOCAL_SETTING:-}" == "" ]]; then
   export LOCAL_SETTING="${current}"
 fi
 
-if [[ "$INIT_LOCAL_POINT" == "" || $DELETE_LOCAL_POINT -gt 4 ]]; then
+if [[ "${INIT_LOCAL_POINT:-}" == "" || "${DELETE_LOCAL_POINT:-0}" -gt 4 ]]; then
   export INIT_LOCAL_POINT=0
 fi
 
-if [[ "$1" == "init" ]]; then
-  case ${2} in
+# 引数が足りなくても set -u で止まらないよう、未指定の引数は空文字として扱う
+declare cmd="${1:-}" target="${2:-}" arg3="${3:-}" arg4="${4:-}"
+
+if [[ "$cmd" == "init" ]]; then
+  case "$target" in
     "local" ) initLocal;;
-    "zsh"   ) ${script_dir}/zsh.sh init && shellReLogin;;
-    "alias" ) ${script_dir}/alias.sh init && shellReLogin;;
-    "ssh"   ) ${script_dir}/ssh.sh init "${3}";;
-    "tool"  ) ${script_dir}/toolInstall.sh init "${3}";;
-           *) initModules ${@};;
+    "zsh"   ) ${script_dir}/zsh.sh init; shellReLogin;;
+    "alias" ) ${script_dir}/alias.sh init; shellReLogin;;
+    "ssh"   ) ${script_dir}/ssh.sh init "$arg3";;
+    "tool"  ) ${script_dir}/toolInstall.sh init "$arg3";;
+           *) initModules "$@";;
   esac
 fi
 
-if [[ "$1" == "update" ]]; then
-  case ${2} in
-    "zsh"   ) ${script_dir}/zsh.sh update "${3}" && shellReLogin;;
-    "alias" ) ${script_dir}/alias.sh update "${3}" "${4}" && shellReLogin;;
+if [[ "$cmd" == "update" ]]; then
+  case "$target" in
+    "zsh"   ) ${script_dir}/zsh.sh update "$arg3"; shellReLogin;;
+    "alias" ) ${script_dir}/alias.sh update "$arg3" "$arg4"; shellReLogin;;
     "ssh"   ) ${script_dir}/ssh.sh update "${*:3}";;
-    "tool"  ) ${script_dir}/toolInstall.sh update "${3}";;
-           *) updateModules ${@};;
+    "tool"  ) ${script_dir}/toolInstall.sh update "$arg3";;
+           *) updateModules "$@";;
   esac
 fi
 
-if [[ "$1" == "delete" ]]; then
-  case ${2} in
-    "zsh"   ) ${script_dir}/zsh.sh delete "${3}" && shellReLogin;;
-    "alias" ) ${script_dir}/alias.sh delete "${3}" && shellReLogin;;
-    "tool"  ) ${script_dir}/toolUnInstall.sh delete "${3}";;
-           *) deleteModules ${@};;
+if [[ "$cmd" == "delete" ]]; then
+  case "$target" in
+    "zsh"   ) ${script_dir}/zsh.sh delete "$arg3"; shellReLogin;;
+    "alias" ) ${script_dir}/alias.sh delete "$arg3"; shellReLogin;;
+    "tool"  ) ${script_dir}/toolUninstall.sh delete "$arg3";;
+           *) deleteModules "$@";;
   esac
 fi
 
-if [[ "$1" == "docker" ]]; then
+if [[ "$cmd" == "docker" ]]; then
   shift;
-  ${current}/src/app/commands/docker.sh $@
+  ${current}/src/app/commands/docker.sh "$@"
 fi
 
-if [[ "$1" == "upgrade" ]]; then
+if [[ "$cmd" == "upgrade" ]]; then
   shift;
-  ${script_dir}/upgrade.sh $@
+  ${script_dir}/upgrade.sh "$@"
 fi

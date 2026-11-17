@@ -206,7 +206,7 @@ class:DockerProject() {
   DockerProject.ContainerAPPExecInitShell() {
     local remote_dir="/root"
     local shell_path
-    shell_path="$(resourceDocker)/scripts/init-local.sh"
+    shell_path="$(resourceDocker)/scripts/laravel/init-local.sh"
 
     # コンテナ内で初期化シェルを実行
     this ExecUploadShell "$(this project_domain) app init shell" "$shell_path" "$remote_dir"
@@ -216,7 +216,7 @@ class:DockerProject() {
   DockerProject.ContainerAPPExecInitShellEnv() {
     local remote_dir="/root"
     local shell_path
-    shell_path="$(resourceDocker)/scripts/init-env-local.sh"
+    shell_path="$(resourceDocker)/scripts/laravel/init-env-local.sh"
 
     # コンテナ内で.env初期化シェルを実行
     this ExecUploadShell "$(this project_domain) app init shell env" "$shell_path" "$remote_dir"
@@ -226,7 +226,7 @@ class:DockerProject() {
   DockerProject.ContainerAPPExecInitShellYML() {
     local remote_dir="/root"
     local shell_path
-    shell_path="$(resourceDocker)/scripts/init-yml-local.sh"
+    shell_path="$(resourceDocker)/scripts/laravel/init-yml-local.sh"
 
     # コンテナ内でyml初期化シェルを実行
     this ExecUploadShell "$(this project_domain) app init shell yml" "$shell_path" "$remote_dir"
@@ -239,6 +239,12 @@ class:DockerProject() {
     local target_dir="$3"
     local container=${4:-app}
     local args="${*:5}"
+
+    # アップロードするシェルがない場合は、コンテナを触る前にエラーで止める
+    if [[ ! -f "$shell_path" ]]; then
+      outputErrorLog "not found shell: $shell_path"
+      return 1
+    fi
 
     outputStartLog "$log_message_main"
     this docker_common ContainerCopyFile "$log_message_main" "$shell_path" "$target_dir" "$container" && \
