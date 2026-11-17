@@ -116,7 +116,7 @@ function initModules() {
 function updateModules() {
   local domain="${2:-}"
   local module
-  module="$(echo "${domain}" | gsed -re's/.*/\L\0/g; s/(-|_)([a-z0-9])/\U\0/g; s/(-|_)//g;')"
+  module="$(echo "${domain}" | gsed -re 's/.*/\L\0/g; s/(-|_)([a-z0-9])/\U\0/g; s/(-|_)//g;')"
   set -- "${@:3}"
   
   if [[ -e "${script_dir}/modules/${module}.sh" ]]; then

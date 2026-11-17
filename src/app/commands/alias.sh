@@ -80,12 +80,15 @@ function updateModulesDeploy() {
 
 # alias設定を削除する
 function remove() {
+  # 削除するファイル（省略時は ~/.alias）
+  local remove_alias_path="${1:-$alias_path}"
+
   outputInfoLog "$remove_alias_path unsetting start..."
 
   # 設定ファイルが存在する場合は削除
   if [[ -e "$remove_alias_path" ]]; then
     outputInfoLog "rm $remove_alias_path"
-    rm $remove_alias_path
+    rm "$remove_alias_path"
   fi
 
   # .zshrc_originalから.aliasの記述を削除

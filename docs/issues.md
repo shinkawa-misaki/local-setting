@@ -1,5 +1,7 @@
 # 問題点・改善提案
 
+> 各項目の「対応状況」は 2026/11/17 時点のもの。行番号は指摘した当時のもので、修正後はずれている場合がある。
+
 ---
 
 ## 重大度: 高（実行時エラーの可能性）
@@ -21,6 +23,10 @@ if [[ "$INIT_LOCAL_POINT" == "" || $DELETE_LOCAL_POINT -gt 4 ]]; then
 if [[ "$INIT_LOCAL_POINT" == "" || ${DELETE_LOCAL_POINT:-0} -gt 4 ]]; then
 ```
 
+**対応状況**: ✅ 対応済み
+- `INIT_LOCAL_POINT` もリポジトリのどこでも設定されていなかったため、環境変数を渡さずに実行するとどのコマンドも147行目で止まっていた
+- `"${INIT_LOCAL_POINT:-}"` と `"${DELETE_LOCAL_POINT:-0}"` に修正（`LOCAL_SETTING` も同様）
+
 ---
 
 ### 2. 変数代入の構文エラー
@@ -39,6 +45,8 @@ string -g zsh_path=in_dir="$(brew --prefix)/bin/zsh"
 ```bash
 string -g zsh_path="$(brew --prefix)/bin/zsh"
 ```
+
+**対応状況**: ✅ 対応済み（修正案のとおり）
 
 ---
 
@@ -68,6 +76,8 @@ function remove() {
 }
 ```
 
+**対応状況**: ✅ 対応済み（修正案のとおり。あわせて `rm` の引数を引用符で囲んだ）
+
 ---
 
 ### 4. 未定義変数 `etc_dir` の使用
@@ -96,6 +106,9 @@ function upgradeTestSetting() {
 }
 ```
 
+**対応状況**: ✅ 対応済み（修正案のとおり）
+- 修正前は `etc_dir` が空のため、`sudo rm -rf $etc_dir/anyenv.d` が `/anyenv.d` を対象にしていた。パスも引用符で囲んだ
+
 ---
 
 ### 5. `$var:ssh_key_dir` の構文エラー
@@ -114,6 +127,11 @@ find $($var:ssh_key_dir) -type f -not -name "*.pub" -print 2> /dev/null | \
 ```bash
 find "$ssh_key_dir" -type f -not -name "*.pub" -print 2> /dev/null | \
 ```
+
+**対応状況**: ❎ 問題なし（指摘の誤り）
+- `$var:変数名` は bash-oo-framework の正式な構文（`util/namedParameters.sh` で `var` が定義されている）
+- `string` などで宣言した変数の値を取り出す書き方なので、`$($var:ssh_key_dir)` で `ssh_key_dir` の値が得られる
+- リポジトリ内でも `$var:` は50か所ほど使われている
 
 ---
 
@@ -136,6 +154,8 @@ module="$(echo "${domain}" | gsed -re's/.*/\L\0/g; ...')"
 module="$(echo "${domain}" | gsed -re 's/.*/\L\0/g; ...')"
 ```
 
+**対応状況**: ✅ 対応済み（修正案のとおり）
+
 ---
 
 ### 7. ファイル名の大文字小文字の不一致があった
@@ -147,9 +167,15 @@ module="$(echo "${domain}" | gsed -re 's/.*/\L\0/g; ...')"
 ```
 
 **問題点**:
-- 実際のファイル名は `toolUnInstall.sh`（存在確認済み）
-- コード内の参照と一致しているが、命名規則が統一されていないけどこれはまぁねって感じかな。放置で
-  - `toolInstall.sh` vs `toolUnInstall.sh`（大文字Iの位置）
+- 実際のファイル名は `toolUninstall.sh`（小文字の `i`）で、参照している `toolUnInstall.sh`（大文字の `I`）と一致していない
+- macOS のファイルシステムは大文字小文字を区別しないため Mac では動くが、Linux（Docker のテスト環境）では見つからずに失敗する
+
+**修正案**:
+```bash
+"tool"  ) ${script_dir}/toolUninstall.sh delete "${3}";;
+```
+
+**対応状況**: ✅ 対応済み（参照側をファイル名に合わせた）
 
 ---
 
@@ -185,6 +211,10 @@ if [[ $# -eq 0 ]]; then
   exit 1
 fi
 ```
+
+**対応状況**: ✅ 対応済み（ヘルプ表示は未対応）
+- 引数を `declare cmd="${1:-}" target="${2:-}" arg3="${3:-}" arg4="${4:-}"` で受け取るように修正
+- あわせて、`zsh.sh init && shellReLogin` のように `&&` でつないでいたため、サブコマンドが失敗しても終了コードが 0 になっていた問題も修正
 
 ---
 
@@ -241,6 +271,11 @@ local brew_prefix
 brew_prefix="$(brew --prefix)"
 zshrcAddWord "PATH=${brew_prefix}/opt/coreutils/libexec/gnubin:\$PATH" "^"
 ```
+
+**対応状況**: ✅ 対応済み（修正案のとおり）
+- findutils と gzip はパス自体も間違っていた（`/usr/local/opt/coreutils/findutils/gnubin` など）
+  - findutils は `${brew_prefix}/opt/findutils/libexec/gnubin` に修正
+  - gzip は `$(brew --prefix)/bin` に直接入り gnubin がないため、PATH の追記をやめた
 
 ---
 
