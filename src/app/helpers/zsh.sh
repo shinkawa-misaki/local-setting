@@ -13,6 +13,14 @@ import helpers/patch
 # ------------------------ #
 # .zprofileを初期化して設定する
 ZshCommon::SetZprofile() {
+  # 上書きする前に、今の .zprofile をバックアップする（初回のみ）
+  local back_up_path="${zprofile_path}_${USER}_bk"
+  if [[ -f "$zprofile_path" && ! -f "$back_up_path" ]]; then
+    outputInfoLog "back up $zprofile_path to $back_up_path"
+    cp "$zprofile_path" "$back_up_path"
+    outputResultLog $? "back up $zprofile_path to $back_up_path"
+  fi
+
   outputStartLog "init .zprofile"
   cp -f "$base_zprofile_path" "$zprofile_path"
   outputResultLog $? "init .zprofile"
@@ -116,6 +124,8 @@ ZshCommon::InitZshrcOriginal() {
     outputResultLog $? "copy .zshrc_original"
     # トークンやパスワードを書き込むので、本人以外は読めないようにする
     chmod 600 "$zshrc_original_path"
+    # このリポジトリの場所（localSetting.sh が設定する）を書き込む
+    zshrcOriginalReplaceWord "@LOCAL_SETTING@" "$LOCAL_SETTING"
     ZshCommon::SetPassPhrase && \
     ZshCommon::SetGithubToken && \
     ZshCommon::SetLdapUser && \

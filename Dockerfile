@@ -20,6 +20,8 @@ RUN useradd -m -s /bin/bash testuser && \
 WORKDIR /home/testuser
 
 USER testuser
+# docker run では $USER が設定されないため、Mac と同じように設定しておく（バックアップ名や chown で使う）
+ENV USER=testuser
 
 COPY --chown=testuser:testuser . /home/testuser/local-setting/
 CMD ["/bin/bash"]

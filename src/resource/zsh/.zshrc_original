@@ -27,7 +27,7 @@ if checkAppleSilicon; then
 fi
 
 # local-setting dir
-export LOCAL_SETTING=$HOME/workspace/umechan
+export LOCAL_SETTING="@LOCAL_SETTING@"
 
 # GITHUB
 export GITHUB_TOKEN=@GITHUB_TOKEN@

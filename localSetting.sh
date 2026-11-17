@@ -140,9 +140,9 @@ function deleteModules() {
   fi
 }
 
-if [[ "${LOCAL_SETTING:-}" == "" ]]; then
-  export LOCAL_SETTING="${current}"
-fi
+# 実行しているこのリポジトリの場所を使う。
+# シェルに古い（別の場所の）LOCAL_SETTING が残っていても、そちらのスクリプトを読まないようにする
+export LOCAL_SETTING="${current}"
 
 if [[ "${INIT_LOCAL_POINT:-}" == "" || "${DELETE_LOCAL_POINT:-0}" -gt 4 ]]; then
   export INIT_LOCAL_POINT=0
