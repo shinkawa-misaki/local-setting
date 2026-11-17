@@ -1,4 +1,4 @@
-namespacce UI
+namespace UI
 import util/class
 
 class:UI.Cursor() {

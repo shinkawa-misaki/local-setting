@@ -1,5 +1,5 @@
 namespace util
-import util/class util/tryCatch UI/Cursor
+import util/class util/tryCatch UI/Cursor UI/Color
 
 class:Test() {
   private UI.Cursor onStartCursor

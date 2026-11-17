@@ -8,8 +8,8 @@ Type::DefineProperty() {
   local class="$2"
   local type="$3"
   local property="$4"
-  local assignment="$5"
-  local defaultValue="$6"
+  local assignment="${5:-}"  # 省略可（例: private string name のとき無し）
+  local defaultValue="${6:-}"  # 省略可
 
   # クラス名に英数字以外の文字があればアンダースコアに置換
   class="${class//[^a-zA-Z0-9]/_}"
@@ -74,7 +74,7 @@ Type::InitializeStatic() {
 Type::Construct() {
   local type="$1"
   local typeSanitized=$(String::SanitizeForVariableName $type)
-  local assignToVariable="$2"
+  local assignToVariable="${2:-}"  # 省略可
 
   # ネスト防止用
   if [[ ! -z "${__constructor_recursion+x}" ]]

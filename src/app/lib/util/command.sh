@@ -39,7 +39,7 @@ Function::GetAllStartingWith() {
 Function::InjectCode() {
   local functionName="$1"
   local injectBefore="$2"
-  local injectAfter="$3"
+  local injectAfter="${3:-}"  # 省略可（未指定なら何も追加しない）
   local body=$(declare -f "$functionName")
   body="${body#*{}" # trim start
   body="${body%\}}" # trim end
