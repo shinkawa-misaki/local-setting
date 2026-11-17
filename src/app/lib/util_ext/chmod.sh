@@ -109,7 +109,7 @@ Chmod::SecretDir() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -type d -print0 | xargs -0 chmod 700
+    find "$target_dir" -type d -print0 | xargs -0 -r chmod 700
   fi
 }
 
@@ -119,7 +119,7 @@ Chmod::SecretFile() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -type f -print0 | xargs -0 chmod 600
+    find "$target_dir" -type f -print0 | xargs -0 -r chmod 600
   fi
 }
 
@@ -130,7 +130,7 @@ Chmod::SecretFileOfName() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -type f -name "$target_name" -print0 | xargs -0 chmod 600
+    find "$target_dir" -type f -name "$target_name" -print0 | xargs -0 -r chmod 600
   fi
 }
 
@@ -150,7 +150,7 @@ Chmod::PublicDir() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -type d -print0 | xargs -0 chmod 744
+    find "$target_dir" -type d -print0 | xargs -0 -r chmod 744
   fi
 }
 
@@ -160,7 +160,7 @@ Chmod::PublicFiles() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -type f -print0 | xargs -0 chmod 644
+    find "$target_dir" -type f -print0 | xargs -0 -r chmod 644
   fi
 }
 
@@ -171,7 +171,7 @@ Chmod::PublicFilesOfName() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -type f -name "$target_name" -print0 | xargs -0 chmod 644
+    find "$target_dir" -type f -name "$target_name" -print0 | xargs -0 -r chmod 644
   fi
 }
 
@@ -181,10 +181,10 @@ Chmod::FilesOwnerOfUser() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -type f -print0 | xargs -0 chown "$USER" || [[ $? == 1 ]]
+    find "$target_dir" -type f -print0 | xargs -0 -r chown "$USER" || [[ $? == 1 ]]
     # 上記が失敗した場合は sudo 実行、それでも失敗する場合は警告
     if [[ $? == 1 ]]; then
-      find "$target_dir" -type f -print0 | xargs -0 sudo chown "$USER" || [[ $? == 1 ]]
+      find "$target_dir" -type f -print0 | xargs -0 -r sudo chown "$USER" || [[ $? == 1 ]]
       if [[ $? == 1 ]]; then
         outputWarnLog "chmod: changing permissions of '$target_dir' Operation not permitted!"
         outputWarnLog "ヘルプデスクにPCを持っていき、root権限が使えるように申請してください。"
@@ -199,10 +199,10 @@ Chmod::DirAllOwnerOfUser() {
 
   # $target_dir がディレクトリの場合のみ処理を行う
   if [[ -d "$target_dir" ]]; then
-    find "$target_dir" -print0 | xargs -0 chown "$USER"  || [[ $? == 1 ]]
+    find "$target_dir" -print0 | xargs -0 -r chown "$USER"  || [[ $? == 1 ]]
     # 上記が失敗した場合は sudo 実行、それでも失敗する場合は警告
     if [[ $? == 1 ]]; then
-      find "$target_dir" -print0 | xargs -0 sudo chown "$USER"  || [[ $? == 1 ]]
+      find "$target_dir" -print0 | xargs -0 -r sudo chown "$USER"  || [[ $? == 1 ]]
       if [[ $? == 1 ]]; then
        outputWarnLog "chmod: changing permissions of '$target_dir' Operation not permitted!"
        outputWarnLog "ヘルプデスクにPCを持っていき、root権限が使えるように申請してください。"

@@ -39,7 +39,8 @@ SSHCommon::SetConfig() {
   # config.dディレクトリがなければ作成
   createSecretDir "$ssh_dir" "$ssh_conf_dir"
 
-  publicDirALL "$ssh_dir"
+  # ここで publicDirALL（744/644）にはしない。
+  # 所有者なら 700/600 のままでも読み書きでき、途中で止まったときに秘密鍵が 644 のまま残ってしまうため。
 
   # 初期化処理時、デフォルト設定ファイルがあればバックアップして削除
   if [[ "${1}" = "init" && -f "$config_path" ]]; then
@@ -61,11 +62,12 @@ SSHCommon::SetConfig() {
   fi
 
   # 設定ファイルを反映（プロジェクト系）
-  if [[ "${1}" = "init"  && ! -f "$config_path" && -f "$config_back_up_path" ]]; then
-    echo "" > "${ssh_dir}/config"
+  # config がなければ作る（元の config がない新しい Mac でも、下の Include 追記ができるように）
+  if [[ ! -f "$config_path" ]]; then
+    ( umask 077; echo "" > "$config_path" )
 
-    # バックアップから差分を適用
-    if [[ -f "$config_back_up_path" ]]; then
+    # 初期化処理時、バックアップがあれば差分を適用
+    if [[ "${1}" = "init" && -f "$config_back_up_path" ]]; then
       patchExecute "$config_path" "$config_back_up_path" "$ssh_conf_dir"
     fi
   fi
@@ -87,8 +89,7 @@ SSHCommon::UpdateConfig() {
 }
 
 SSHCommon::ReMoveAllConfig() {
-  # プロジェクトごとの設定ファイルを反映
-  publicDirALL "$ssh_dir"
+  # publicDirALL はしない（SetConfig と同じ理由）
 
   # バックアップを復元する
   if [[ -f "$config_back_up_path" ]]; then
@@ -120,7 +121,7 @@ SSHCommon::UpdateSetting() {
   outputStartLog "update ssh setting $project_domain"
   local project_domain="$1"
 
-  publicDirALL "$ssh_dir"
+  # publicDirALL はしない（SetConfig と同じ理由）
 
   # 更新処理時、既存設定ファイルをバックアップ
   if [[ "${1}" = "update" && -f "$config_path" ]]; then

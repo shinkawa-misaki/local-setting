@@ -39,7 +39,9 @@ AWS::CreateSetting() {
     profile="default"
   fi
 
-  publicDirALL "$aws_dir"
+  # ここで publicDirALL（744/644）にはしない。
+  # 所有者なら 700/600 のままでも読み書きでき、途中で止まったときに credentials が 644 のまま残ってしまうため。
+
   # aws configure list の結果が 0 であれば指定した profile は存在する
   if aws configure list --profile "$profile" >/dev/null 2>&1; then
     confirmMsg "aws config の $profile が下記の内容で設定されています。"

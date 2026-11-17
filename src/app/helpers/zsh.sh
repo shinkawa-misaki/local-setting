@@ -114,6 +114,8 @@ ZshCommon::InitZshrcOriginal() {
     outputStartLog "copy .zshrc_original"
     cp -f "$base_zshrc_original_path" "$zshrc_original_path"
     outputResultLog $? "copy .zshrc_original"
+    # トークンやパスワードを書き込むので、本人以外は読めないようにする
+    chmod 600 "$zshrc_original_path"
     ZshCommon::SetPassPhrase && \
     ZshCommon::SetGithubToken && \
     ZshCommon::SetLdapUser && \

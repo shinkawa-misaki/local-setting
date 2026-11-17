@@ -18,7 +18,7 @@ import util_ext/providers
 ## DECLARATION ##
 # ------------------------ #
 string -g alias_path="$HOME/.alias"
-string -g base_alias_path="$(resourceAlias)/base"
+string -g base_alias_path="$(resourceAlias)/base.sh"
 string -g zshrc_original_path="$HOME/.zshrc_original"
 
 ## MAIN ##

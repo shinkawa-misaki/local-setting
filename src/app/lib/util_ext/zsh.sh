@@ -78,6 +78,7 @@ ZshrcOriginal::Init() {
   if [[ ! -f "$zshrc_original_path" ]]; then
     outputInfoLog "touch $zshrc_original_path"
     touch "$zshrc_original_path"
+    chmod 600 "$zshrc_original_path"  # トークンやパスワードを書き込むファイルなので本人のみ読めるようにする
   fi
 
   Zshrc::AddSourceFile "$zshrc_original_path"
