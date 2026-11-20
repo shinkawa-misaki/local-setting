@@ -7,24 +7,9 @@ PATH=$HOME/pear/bin:$PATH
 # composer
 PATH=$HOME/.composer/vendor/bin:$PATH
 
-function checkAppleSilicon() {
-  local arch_type
-  local is_rosetta
-  arch_type=$(arch)
-  is_rosetta=$(sysctl -in sysctl.proc_translated 2>/dev/null)
-
-  if [[ "$arch_type" == "arm64" || "$is_rosetta" == "1" ]]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
-# M1以降用の対応
-if checkAppleSilicon; then
-  PATH=$(printenv PATH | sed -e 's/usr\/local/opt\/homebrew/g')
-  MANPATH=$(printenv MANPATH | sed -e 's/usr\/local/opt\/homebrew/g')
-fi
+# Apple Silicon の Homebrew の PATH は .zprofile（brew shellenv）で設定する。
+# 以前は PATH の usr/local を opt/homebrew に置き換えていたが、
+# Docker Desktop など /usr/local/bin に入るコマンドが使えなくなるのでやめた
 
 # local-setting dir
 export LOCAL_SETTING="@LOCAL_SETTING@"

@@ -113,6 +113,13 @@ function installDocker() {
   local installCommand="brew install composer"
   toolInstall "brew" "composer" "$installCommand"
 
+  # Docker Desktop が入っている場合は、その docker をそのまま使う。
+  # brew の docker（CLI だけ）を入れると PATH で先に見つかり、Docker Desktop の docker を隠してしまう
+  if [[ -d "/Applications/Docker.app" ]]; then
+    outputInfoLog "Docker Desktop is installed. skip brew install docker"
+    return 0
+  fi
+
   # brew の bin ディレクトリを取得
   local bin_dir
   bin_dir="$(brew --prefix)/bin"

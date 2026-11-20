@@ -34,8 +34,8 @@ string -g base_zshrc_original_path="$(resourceZsh)/.zshrc_original"
 string -g zsh_path="$(brew --prefix)/bin/zsh"
 
 #　zsh 環境を再インストールして初期状態に戻す
+# oh-my-zsh のアンインストールは、入れ直すと答えたときだけ installZsh の中で行う
 function cleanUp() {
-  unInstallZsh
   installZsh
   zshrcOriginalInit
   setZprofile

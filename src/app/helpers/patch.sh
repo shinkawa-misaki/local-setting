@@ -69,7 +69,9 @@ Patch::Execute() {
 
       # 差分がある場合のみ上書きする
       if ! diff -q "$default_path" "$cleaned_file" >/dev/null; then
-        mv "$cleaned_file"  "$default_path"
+        # mv ではなく上書きにして、シンボリックリンク（dotfiles など）ならリンク先を書き換える
+        cat "$cleaned_file" > "$default_path"
+        rm "$cleaned_file"
         chmod 600 "$default_path"
         result=$?
         outputResultLog "$result" "$log_message of grep ${default_path##*/} to ${back_up_path##*/}"

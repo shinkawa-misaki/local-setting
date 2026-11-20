@@ -16,7 +16,7 @@ GSed::Replace() {
   replace_word=$(GSed::EscapeRegex "${2//\|/\\\|}")
   local target_file="$3"
 
-  gsed -i -e 's|'$target_word'|'$replace_word'|g' $target_file
+  gsed --follow-symlinks -i -e 's|'$target_word'|'$replace_word'|g' $target_file
 }
 
 # 文字列を置換する関数 (sudo + gsed を使用)
@@ -28,7 +28,7 @@ GSed::ReplaceSudo() {
   replace_word=$(GSed::EscapeRegex "${2//\|/\\\|}")
   local target_file="$3"
 
-  sudo gsed -i -e 's|'"$target_word"'|'"$replace_word"'|g' "$target_file"
+  sudo gsed --follow-symlinks -i -e 's|'"$target_word"'|'"$replace_word"'|g' "$target_file"
 }
 
 # 正規表現を用いて文字列を置換する関数 (gsed を使用)
@@ -37,7 +37,7 @@ GSed::ReplaceOFRegExp() {
   local replace_word="$2"
   local target_file="$3"
 
-  gsed -i -re 's|'$target_word'|'$replace_word'|g' "$target_file"
+  gsed --follow-symlinks -i -re 's|'$target_word'|'$replace_word'|g' "$target_file"
 }
 
 # 正規表現の先頭行だけを置換する関数
@@ -46,7 +46,7 @@ GSed::ReplaceOFRegExpFirst() {
   local replace_word="$2"
   local target_file="$3"
 
-  gsed -i -re 's|'$target_word'|'$replace_word'|' "$target_file"
+  gsed --follow-symlinks -i -re 's|'$target_word'|'$replace_word'|' "$target_file"
 }
 
 # 文字列をキャメルケースに変換する関数
@@ -72,17 +72,17 @@ GSed::Add() {
   # ファイルが空 (または存在しない) 場合は先頭に行を追加
   if [[ ! -s "$target_file" ]]; then
     echo -e "\n" > "$target_file"
-    gsed -i -e "1i $target_word" "$target_file"
+    gsed --follow-symlinks -i -e "1i $target_word" "$target_file"
   # 検索ワードが見つかった場合は前後に挿入
   elif [[ $search_word_is_exist -ne 0 ]]; then
     if [[ $search_option == "after" ]]; then
-      gsed -i -e "/$search_word/N; s/\n/\n$target_word\n/;" "$target_file"
+      gsed --follow-symlinks -i -e "/$search_word/N; s/\n/\n$target_word\n/;" "$target_file"
     else
-      gsed -i -e "/$search_word/{x; s/^/$target_word\n/; x;}" "$target_file"
+      gsed --follow-symlinks -i -e "/$search_word/{x; s/^/$target_word\n/; x;}" "$target_file"
     fi
   # 見つからなければファイル末尾に追記
   else
-    gsed -i -re "\$a $target_word" "$target_file"
+    gsed --follow-symlinks -i -re "\$a $target_word" "$target_file"
   fi
 }
 
@@ -102,17 +102,17 @@ GSed::AddSudo() {
   # ファイルが存在しない場合は先頭に行を追加
   if [[ ! -f "$target_file" ]]; then
     echo -e "\n" > "$target_file"
-    sudo gsed -i -e "1i $target_word" "$target_file"
+    sudo gsed --follow-symlinks -i -e "1i $target_word" "$target_file"
   # 検索ワードが見つかった場合は前後に挿入
   elif [[ $search_word_is_exist -ne 0 ]]; then
     if [[ $search_option == "after" ]]; then
-      sudo gsed -i -e "/$search_word/N; s/\n/\n$target_word\n/;" "$target_file"
+      sudo gsed --follow-symlinks -i -e "/$search_word/N; s/\n/\n$target_word\n/;" "$target_file"
     else
-      sudo gsed -i -e "/$search_word/{x; s/^/$target_word\n/; x;}" "$target_file"
+      sudo gsed --follow-symlinks -i -e "/$search_word/{x; s/^/$target_word\n/; x;}" "$target_file"
     fi
   # 見つからなければファイル末尾に追記
   else
-    sudo gsed -i -re "\$a $target_word" "$target_file"
+    sudo gsed --follow-symlinks -i -re "\$a $target_word" "$target_file"
   fi
 }
 
@@ -133,18 +133,18 @@ GSed::AddTargetRowNo() {
   # 対象ファイルが存在しない場合は新規作成し、先頭に追記する
   if [[ ! -f "$target_file" ]]; then
     sudo echo -e "\n" > "$target_file"
-    sudo gsed -i -e "1i $target_word" "$target_file"
+    sudo gsed --follow-symlinks -i -e "1i $target_word" "$target_file"
   # search_word_is_exist が 0 でない(= 検索ワードが既に存在する)場合は検索ワードの前後に挿入する
   elif [[ $search_word_is_exist -ne 0 ]]; then
     # search_option が "after" の場合のみ検索ワードの直後に追記する
     if [[ $search_option == "after" ]]; then
-      sudo gsed -i -e "/$search_word/N; s/\n/\n$target_word\n/;" "$target_file"
+      sudo gsed --follow-symlinks -i -e "/$search_word/N; s/\n/\n$target_word\n/;" "$target_file"
     else
-      sudo gsed -i -e "/$search_word/{x; s/^/$target_word\n/; x;}" "$target_file"
+      sudo gsed --follow-symlinks -i -e "/$search_word/{x; s/^/$target_word\n/; x;}" "$target_file"
     fi
   # それ以外はファイルの末尾に追記する
   else
-    sudo gsed -i -re "\$a $target_word" "$target_file"
+    sudo gsed --follow-symlinks -i -re "\$a $target_word" "$target_file"
   fi
 
 }
@@ -236,11 +236,11 @@ GSed::AddTargetRowNo() {
   # 行番号が 0 かつファイルが存在しない場合は新規作成＋先頭に追記
   if [[ "$target_row_no" -eq 0 && ! -f "$target_file" ]]; then
     echo -e "\n" > "$target_file"
-    gsed -i -e "1i $target_word" "$target_file"
+    gsed --follow-symlinks -i -e "1i $target_word" "$target_file"
   elif [[ "$target_row_no" -lt "$end_row" ]]; then
-    gsed -i -e "${target_row_no}i $target_word" "$target_file"
+    gsed --follow-symlinks -i -e "${target_row_no}i $target_word" "$target_file"
   else
-    gsed -i -re "\$a $target_word" "$target_file"
+    gsed --follow-symlinks -i -re "\$a $target_word" "$target_file"
   fi
 }
 
@@ -272,7 +272,7 @@ GSed::DeleteLikeWord() {
   fi
 
   outputStartLog "$log_message"
-  gsed -i -e "/$target_word/d" $target_file
+  gsed --follow-symlinks -i -e "/$target_word/d" $target_file
   outputResultLog $? "$log_message"
 }
 
@@ -282,7 +282,7 @@ GSed::DeleteTargetRows() {
   local end_point="$2"
   local target_file="$3"
 
-  gsed -i "${start_point},${end_point}d" "$target_file"
+  gsed --follow-symlinks -i "${start_point},${end_point}d" "$target_file"
 }
 
 # 特殊文字をエスケープする関数

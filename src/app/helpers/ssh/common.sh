@@ -42,11 +42,13 @@ SSHCommon::SetConfig() {
   # ここで publicDirALL（744/644）にはしない。
   # 所有者なら 700/600 のままでも読み書きでき、途中で止まったときに秘密鍵が 644 のまま残ってしまうため。
 
-  # 初期化処理時、デフォルト設定ファイルがあればバックアップして削除
-  if [[ "${1}" = "init" && -f "$config_path" ]]; then
-    if [[ ! -f "$config_back_up_path" ]]; then
-      mv "$config_path" "$config_back_up_path"
-    fi
+  # 初期化処理時、今の config をバックアップして中身を空にする（下でバックアップから差分を戻す）
+  # mv ではなく cp と上書きにするのは、config がシンボリックリンク（dotfiles など）のときにリンクを残すため
+  local is_config_reset=0
+  if [[ "${1}" = "init" && -f "$config_path" && ! -f "$config_back_up_path" ]]; then
+    cp "$config_path" "$config_back_up_path"
+    echo "" > "$config_path"
+    is_config_reset=1
   fi
 
   # LDAP_USERを設定ファイルに反映
@@ -65,27 +67,49 @@ SSHCommon::SetConfig() {
   # config がなければ作る（元の config がない新しい Mac でも、下の Include 追記ができるように）
   if [[ ! -f "$config_path" ]]; then
     ( umask 077; echo "" > "$config_path" )
-
-    # 初期化処理時、バックアップがあれば差分を適用
-    if [[ "${1}" = "init" && -f "$config_back_up_path" ]]; then
-      patchExecute "$config_path" "$config_back_up_path" "$ssh_conf_dir"
-    fi
+    is_config_reset=1
   fi
 
-  # 設定ファイルを反映（プロジェクト毎）
-  SSHCommon::UpdateConfig "Include conf.d/\*.conf"
-  # 設定ファイルを反映（共通）
-  SSHCommon::UpdateConfig "Include conf.d/default-config"
+  # 初期化処理時、config を作り直したらバックアップから差分を適用
+  if [[ "$is_config_reset" -eq 1 && "${1}" = "init" && -f "$config_back_up_path" ]]; then
+    patchExecute "$config_path" "$config_back_up_path" "$ssh_conf_dir"
+  fi
+
+  # 設定ファイルを反映（プロジェクト毎と共通の Include 行）
+  SSHCommon::UpdateConfig
 
   secretDirALL "$ssh_dir"
 }
 
-# SSH設定ファイルに指定した文字列を追加
+# ~/.ssh/config に conf.d を読み込む Include 行を、正しい位置に入れる
+#   先頭: Include conf.d/*.conf（プロジェクトごとの設定。ssh は最初に見つかった値を使うので一番優先される）
+#   末尾: Match all + Include conf.d/default-config（共通の設定。自分で書いた設定より優先度を下げる）
+# 末尾にそのまま Include を書くと、直前の Host ブロックの中に入ってしまい、そのホストでしか読まれない。
+# Match all を前に置くと、どのホストにも当てはまるようになる。
 SSHCommon::UpdateConfig() {
-  local word="$1"
-  local log_message="ssh config add $word"
+  local log_message="ssh config add Include conf.d"
+  outputStartLog "$log_message"
 
-  gsAddUniqueRow "$word\n" "$config_path" "^" "$log_message"
+  local tmp_path
+  tmp_path="$(mktemp)"
+  {
+    echo "Include conf.d/*.conf"
+    echo ""
+    # 前に足した Include 行（以前の版で末尾に足したものも含む）を消してから入れ直す
+    gsed -e '/^Match all$/{N;/\nInclude conf\.d\/default-config$/d;}' \
+         -e '/^Include conf\.d\/\*\.conf$/d' \
+         -e '/^Include conf\.d\/default-config$/d' \
+         -e '/./,$!d' \
+         "$config_path"
+    echo ""
+    echo "Match all"
+    echo "Include conf.d/default-config"
+  } | cat -s > "$tmp_path"
+
+  # cat で上書きして、config のパーミッション（600）はそのまま残す
+  cat "$tmp_path" > "$config_path"
+  outputResultLog $? "$log_message"
+  rm -f "$tmp_path"
 }
 
 SSHCommon::ReMoveAllConfig() {
@@ -93,7 +117,9 @@ SSHCommon::ReMoveAllConfig() {
 
   # バックアップを復元する
   if [[ -f "$config_back_up_path" ]]; then
-    mv "$config_back_up_path" "$config_path"
+    # mv ではなく上書きにして、config がシンボリックリンクならリンクを残す
+    cat "$config_back_up_path" > "$config_path"
+    rm "$config_back_up_path"
   else
     if [[ -d "$ssh_conf_dir" ]]; then
       local target_files=( $(find "$ssh_conf_dir" -type f -not -name "*default*") )
@@ -145,11 +171,8 @@ SSHCommon::UpdateSetting() {
     patchExecute "$config_path" "$config_back_up_path" "$ssh_conf_dir"
   fi
 
-  # 設定ファイルを反映（プロジェクト毎）
-  SSHCommon::UpdateConfig "Include conf.d/\*.conf"
-
-  # 設定ファイルを反映（共通）
-  SSHCommon::UpdateConfig "Include conf.d/default-config"
+  # 設定ファイルを反映（プロジェクト毎と共通の Include 行）
+  SSHCommon::UpdateConfig
 
   secretDirALL "$ssh_dir"
 

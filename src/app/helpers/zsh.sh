@@ -24,16 +24,41 @@ ZshCommon::SetZprofile() {
   outputStartLog "init .zprofile"
   cp -f "$base_zprofile_path" "$zprofile_path"
   outputResultLog $? "init .zprofile"
+
+  # 元の .zprofile にしかない行（Docker Desktop が足した PATH など）を末尾に戻す
+  if [[ -f "$back_up_path" ]]; then
+    patchExecute "$zprofile_path" "$back_up_path"
+  fi
 }
 
 # zshと関連設定をインストール
 ZshCommon::Install() {
   outputInfoLog "$zshrc_path & $zshrc_original_path setting start..."
   local answer
-  inputMsg "oh-my-zshを適用しますか？（y/n）:"
+  inputMsg "oh-my-zshを入れ直しますか？ n なら今の oh-my-zsh と .zshrc はそのまま使います（y/n）:"
   read -r answer
   if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    # .zshrc がシンボリックリンク（dotfiles など）なら、リンク先を覚えておく
+    local zshrc_link_target=""
+    if [[ -L "$zshrc_path" ]]; then
+      zshrc_link_target="$(readlink "$zshrc_path")"
+      # 相対パスのリンクは、.zshrc のあるディレクトリから見たパスにする
+      if [[ "$zshrc_link_target" != /* ]]; then
+        zshrc_link_target="$(dirname "$zshrc_path")/$zshrc_link_target"
+      fi
+    fi
+
+    # 入れ直すときだけアンインストールする（n のときに .zshrc が消えたままにならないように）
+    ZshCommon::UnInstallOhMyZsh
     ZshCommon::InstallOhMyZsh
+
+    # oh-my-zsh の uninstall/install は .zshrc を普通のファイルに置き換えるので、
+    # できた内容をリンク先に書き戻して、リンクを張り直す
+    if [[ -n "$zshrc_link_target" && ! -L "$zshrc_path" ]]; then
+      outputInfoLog "write $zshrc_path to $zshrc_link_target and relink"
+      cat "$zshrc_path" > "$zshrc_link_target"
+      ln -sf "$zshrc_link_target" "$zshrc_path"
+    fi
   else
     if [[ ! -f "$zshrc_path" ]]; then
       touch "$zshrc_path"
@@ -46,7 +71,7 @@ ZshCommon::Install() {
   # BOMが付いてい流場合の処理
   if [[ "$bom_hex" == "efbbbf" ]]; then
     # oh-my-zsh の基本設定
-    gsed -i '1s/^\xEF\xBB\xBF//' "$zshrc_path"
+    gsed --follow-symlinks -i '1s/^\xEF\xBB\xBF//' "$zshrc_path"
     gsAddUniqueRowSudo "export ZSH=\"\$HOME/.oh-my-zsh\"" "$zshrc_path"
     gsAddUniqueRowSudo "ZSH_THEME=\"wedisagree\"" "$zshrc_path"
     gsAddUniqueRowSudo "plugins=(git)" "$zshrc_path"
@@ -96,7 +121,7 @@ ZshCommon::InstallOhMyZsh() {
 
   # テーマをwedisagreeに設定
   outputStartLog "$zshrc_path & $zshrc_original_path setting"
-  gsed -i -e 's/ZSH_THEME="robbyrussell"/ZSH_THEME="wedisagree"/' "$zshrc_path"
+  gsed --follow-symlinks -i -e 's/ZSH_THEME="robbyrussell"/ZSH_THEME="wedisagree"/' "$zshrc_path"
   outputResultLog $? "$zshrc_path & $zshrc_original_path setting"
 
   # バックアップから差分を適用
@@ -198,7 +223,7 @@ ZshCommon::UnInstallOhMyZsh() {
   if [[ -e ~/.oh-my-zsh ]]; then
     local back_up_path="${zshrc_path}_${USER}_bk"
     # バックアップがなければ作成
-    if [[ ! -e $back_up_path ]]; then
+    if [[ -f "$zshrc_path" && ! -e "$back_up_path" ]]; then
       outputInfoLog "back up $zshrc_path to $back_up_path"
       cp "$zshrc_path" "$back_up_path"
       outputResultLog $? "back up $zshrc_path to $back_up_path"
