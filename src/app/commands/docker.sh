@@ -10,10 +10,10 @@ namespace commands
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/log
+import util_ext/log
 import helpers/config
-import util-ume/docker
-import util-ume/providers
+import util_ext/docker
+import util_ext/providers
 import helpers/database/common
 
 ## MAIN ##

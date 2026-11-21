@@ -1,14 +1,11 @@
-#!/usr/bin/env bash
-set -e
-
-namespace util-ext/alias
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/log
-import util-ext/grep
-import util-ext/gsed
-import util-ext/providers
+import util_ext/log
+import util_ext/grep
+import util_ext/gsed
+import util_ext/providers
 
 ## MAIN ##
 # ------------------------ #

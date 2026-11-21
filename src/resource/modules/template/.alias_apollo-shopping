@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+function template() {
+  if [[ "${#@}" -eq 0 ]]; then
+    $HOME/workspace/template
+    phpenv "template" "10.0"
+  elif [[ "${1}" == "gitSkip" ]]; then
+    $LOCAL_SETTING/src/app/commands/modules/template.sh gitSkip "$2"
+  else
+    localSetting "docker" "template" "$@"
+  fi
+}

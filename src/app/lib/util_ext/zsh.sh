@@ -1,15 +1,10 @@
-#!/usr/bin/env bash
-set -e
-
-# 「zshrc」や「zshrc_original」ファイルを操作するための専用ユーティリティ群
-
-namespace util-ext/zsh
+namespace util_ext
 
 ## IMPORT ##
 # ------------------------ #
-import util-ext/log
-import util-ext/grep
-import util-ext/gsed
+import util_ext/log
+import util_ext/grep
+import util_ext/gsed
 
 ## MAIN ##
 # ------------------------ #
@@ -83,6 +78,7 @@ ZshrcOriginal::Init() {
   if [[ ! -f "$zshrc_original_path" ]]; then
     outputInfoLog "touch $zshrc_original_path"
     touch "$zshrc_original_path"
+    chmod 600 "$zshrc_original_path"  # トークンやパスワードを書き込むファイルなので本人のみ読めるようにする
   fi
 
   Zshrc::AddSourceFile "$zshrc_original_path"

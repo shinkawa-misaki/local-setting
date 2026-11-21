@@ -10,9 +10,9 @@ namespace commands
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/zsh
-import util-ume/gsed
-import util-ume/providers
+import util_ext/zsh
+import util_ext/gsed
+import util_ext/providers
 import helpers/tool
 
 ## DECLARATION ##
@@ -78,26 +78,28 @@ function installIsolatedTools() {
 
 # GNU/Linux 相当の coreutils系ツールをインストールし、パスを .zshrc に追記?
 function installGNULinuxTool() {
+  # Homebrew のインストール先（Apple Silicon は /opt/homebrew、Intel は /usr/local）
+  local brew_prefix
+  brew_prefix="$(brew --prefix)"
+
   # GNU/Linux版(ファイル操作)をインストール
   local installCommand="brew install coreutils"
   toolInstall "brew" "coreutils" "$installCommand"
   zshrcAddWord "# coreutils" "^"
-  zshrcAddWord "PATH=/usr/local/opt/coreutils/libexec/gnubin:\$PATH" "^"
-  zshrcAddWord "MANPATH=/usr/local/opt/coreutils/libexec/gnuman:\$MANPATH\n" "^"
+  zshrcAddWord "PATH=${brew_prefix}/opt/coreutils/libexec/gnubin:\$PATH" "^"
+  zshrcAddWord "MANPATH=${brew_prefix}/opt/coreutils/libexec/gnuman:\$MANPATH\n" "^"
 
   # GNU/Linux版(ファイル圧縮/解凍系)をインストール
   local installCommand="brew install gzip"
   toolInstall "brew" "gzip" "$installCommand"
-  zshrcAddWord "# gzip" "^"
-  zshrcAddWord "PATH=/usr/local/opt/coreutils/gzip/gnubin:\$PATH" "^"
-  zshrcAddWord "MANPATH=/usr/local/opt/coreutils/gzip/gnuman:\$MANPATH\n" "^"
+  # gzip は g の付かない名前で $(brew --prefix)/bin に直接入る（gnubin はない）ので、PATH の追記は不要
 
   # GNU/Linux版(find, locate, updatedb, xargs)をインストール
   local installCommand="brew install findutils"
   toolInstall "brew" "findutils" "$installCommand"
   zshrcAddWord "# findutils" "^"
-  zshrcAddWord "PATH=/usr/local/opt/coreutils/findutils/gnubin:\$PATH" "^"
-  zshrcAddWord "MANPATH=/usr/local/opt/coreutils/findutils/gnuman:\$MANPATH\n" "^"
+  zshrcAddWord "PATH=${brew_prefix}/opt/findutils/libexec/gnubin:\$PATH" "^"
+  zshrcAddWord "MANPATH=${brew_prefix}/opt/findutils/libexec/gnuman:\$MANPATH\n" "^"
 }
 
 # GUIアプリケーションを cask でインストール
@@ -110,6 +112,13 @@ function installApps() {
 function installDocker() {
   local installCommand="brew install composer"
   toolInstall "brew" "composer" "$installCommand"
+
+  # Docker Desktop が入っている場合は、その docker をそのまま使う。
+  # brew の docker（CLI だけ）を入れると PATH で先に見つかり、Docker Desktop の docker を隠してしまう
+  if [[ -d "/Applications/Docker.app" ]]; then
+    outputInfoLog "Docker Desktop is installed. skip brew install docker"
+    return 0
+  fi
 
   # brew の bin ディレクトリを取得
   local bin_dir
@@ -141,7 +150,7 @@ function updateModules() {
   if [[ "$is_exist" -ne 0 ]]; then
     eval "$alias_name"
   else
-    echo "update ssh setting is not found ${1}"
+    echo "tool setting is not found ${1}"
   fi
 }
 

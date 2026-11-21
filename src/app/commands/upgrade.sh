@@ -16,10 +16,10 @@ namespace command
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/zsh
-import util-ume/gsed
-import util-ume/json
-import util-ume/providers
+import util_ext/zsh
+import util_ext/gsed
+import util_ext/json
+import util_ext/providers
 import helpers/tool/common
 
 ## DECLARATION ##
@@ -227,13 +227,16 @@ function upgradeGitHooks() {
 #=============================================================
 #　テスト環境設定をリセット＆anyenv 関連をアンインストール
 function upgradeTestSetting() {
+  local etc_dir
+  etc_dir="$(brew --prefix)/etc"
+
   # anyenvをアンインストール
   zshrcDeleteWord "anyenv"
   local unInstallCommand="brew uninstall anyenv"
   toolUnInstall "brew" "anyenv" "$unInstallCommand"
 
-  if [[ -d $etc_dir/anyenv.d ]]; then
-    sudo rm -rf $etc_dir/anyenv.d
+  if [[ -d "${etc_dir}/anyenv.d" ]]; then
+    sudo rm -rf "${etc_dir}/anyenv.d"
   fi
   if [[ -d ~/.anyenv ]]; then
     sudo rm -rf ~/.anyenv

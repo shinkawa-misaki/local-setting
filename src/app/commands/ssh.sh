@@ -9,11 +9,11 @@ namespace commands
 ## IMPORT ##
 # ------------------------ #
 import util/type
-import util-ume/json
-import util-ume/gsed
+import util_ext/json
+import util_ext/gsed
 import util/exception
-import util-ume/lolcat
-import util-ume/providers
+import util_ext/lolcat
+import util_ext/providers
 import helpers/ssh
 
 ## DECLARATION ##
@@ -45,20 +45,35 @@ function cleanUp() {
   outPutSuccess
 }
 
-# SSH鍵を全て削除後、再登録（必要な場合のみ）
+# ~/.ssh/keys の鍵のうち、まだ ssh-agent に登録されていないものだけを登録する。
+# .zshrc_original からシェルを開くたびに呼ばれるので、
+# 自分で登録した鍵（~/.ssh/id_ed25519 など）を消す ssh-add -D はしない
 function cleanUpSSHAdd() {
-  local res
-  res=$(ssh-add -l | grep -c 'RSA' || [[ $? == 1 ]])
-  # 登録済みのSSH鍵が3件未満の場合、再登録処理を実施
-  if [[ $res -ne 3 ]]; then
-    cleanSSHChmod
-    ssh-add -D
-    find $($var:ssh_key_dir) -type f -not -name "*.pub" -print 2> /dev/null | \
-      while read -r key_path
-      do
-        exSSHAdd "$key_path"
-      done
+  local key_paths
+  key_paths="$(find "$ssh_key_dir" -type f -not -name "*.pub" -not -name ".DS_Store" -print 2> /dev/null || true)"
+  # 登録する鍵がなければ何もしない
+  if [[ -z "$key_paths" ]]; then
+    return 0
   fi
+
+  cleanSSHChmod
+
+  # 登録済みの鍵の一覧（1件もないと ssh-add -l は 1 を返すので、止まらないようにする）
+  local loaded_keys
+  loaded_keys="$(ssh-add -l 2> /dev/null || true)"
+
+  local key_path
+  while read -r key_path <&3; do
+    # 公開鍵があれば fingerprint を比べて、登録済みなら飛ばす
+    if [[ -f "${key_path}.pub" ]]; then
+      local fingerprint
+      fingerprint="$(ssh-keygen -lf "${key_path}.pub" 2> /dev/null | awk '{print $2}')"
+      if [[ -n "$fingerprint" && "$loaded_keys" == *"$fingerprint"* ]]; then
+        continue
+      fi
+    fi
+    exSSHAdd "$key_path"
+  done 3<<< "$key_paths"
 }
 
 # 全てのSSH設定をアップデートする

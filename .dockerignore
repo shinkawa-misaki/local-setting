@@ -1,0 +1,8 @@
+# テスト用イメージに不要なもの・入れてはいけないものを除く
+.git
+.idea/
+**/.DS_Store
+
+# 秘密鍵とデータベースのダンプ（.gitignore と同じ理由）
+src/resource/ssh/keys/
+src/resource/docker/dump.sql

@@ -10,7 +10,7 @@ namespace commands
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/zsh
+import util_ext/zsh
 import helpers/tool
 
 ## DECLARATION ##
@@ -242,7 +242,7 @@ function deleteModules() {
   if [[ "$is_exist" -ne 0 ]]; then
     eval "$alias_name"
   else
-    echo "update ssh setting is not found ${1}"
+    echo "tool setting is not found ${1}"
   fi
 }
 

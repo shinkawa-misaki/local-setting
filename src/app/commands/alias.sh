@@ -10,15 +10,15 @@ namespace commands
 # ------------------------ #
 import util/type
 import util/exception
-import util-ume/log
-import util-ume/zsh
-import util-ume/alias
-import util-ume/providers
+import util_ext/log
+import util_ext/zsh
+import util_ext/alias
+import util_ext/providers
 
 ## DECLARATION ##
 # ------------------------ #
 string -g alias_path="$HOME/.alias"
-string -g base_alias_path="$(resourceAlias)/base"
+string -g base_alias_path="$(resourceAlias)/base.sh"
 string -g zshrc_original_path="$HOME/.zshrc_original"
 
 ## MAIN ##
@@ -80,12 +80,15 @@ function updateModulesDeploy() {
 
 # alias設定を削除する
 function remove() {
+  # 削除するファイル（省略時は ~/.alias）
+  local remove_alias_path="${1:-$alias_path}"
+
   outputInfoLog "$remove_alias_path unsetting start..."
 
   # 設定ファイルが存在する場合は削除
   if [[ -e "$remove_alias_path" ]]; then
     outputInfoLog "rm $remove_alias_path"
-    rm $remove_alias_path
+    rm "$remove_alias_path"
   fi
 
   # .zshrc_originalから.aliasの記述を削除
