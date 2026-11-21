@@ -131,6 +131,7 @@ find "$ssh_key_dir" -type f -not -name "*.pub" -print 2> /dev/null | \
 **対応状況**: ❎ 問題なし（指摘の誤り）
 - `$var:変数名` は bash-oo-framework の正式な構文（`util/namedParameters.sh` で `var` が定義されている）
 - `string` などで宣言した変数の値を取り出す書き方なので、`$($var:ssh_key_dir)` で `ssh_key_dir` の値が得られる
+- その後 `cleanUpSSHAdd` を書き直した（`ssh-add -D` をやめた）ので、今のコードではこの箇所は `"$ssh_key_dir"` になっている
 - リポジトリ内でも `$var:` は50か所ほど使われている
 
 ---

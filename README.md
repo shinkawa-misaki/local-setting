@@ -60,7 +60,8 @@ local-setting/
 ./localSetting.sh init zsh            # zsh環境
 ./localSetting.sh init alias          # エイリアス
 ./localSetting.sh init ssh [module]   # SSH設定（all または特定モジュール）
-./localSetting.sh init tool [name]    # ツールインストール
+./localSetting.sh init tool           # ツールインストール（すべて）
+./localSetting.sh init <project-name> # プロジェクトの初期化（clone・Docker 環境の構築など）
 ```
 
 ### 更新コマンド
@@ -82,16 +83,22 @@ local-setting/
 ### Docker関連
 
 ```bash
-./localSetting.sh docker init <project-name>  # Docker環境の初期化
-./localSetting.sh docker clean                # 全Docker環境をクリーンアップ
+./localSetting.sh docker <project-name> start  # コンテナを起動（stop / restart / ssh / sql / log なども）
+./localSetting.sh docker clean                 # 全Docker環境をクリーンアップ
 ```
+
+プロジェクトの Docker 環境を作るのは `init <project-name>` です。`src/config/<project-name>.json` と `src/app/commands/modules/<project-name>.sh` が必要です（リポジトリには `template` だけがあります）。
 
 ### 削除コマンド
 
 ```bash
-./localSetting.sh delete zsh     # zsh設定を削除
-./localSetting.sh delete ssh     # SSH設定を削除
+./localSetting.sh delete zsh <word>    # .zshrc_original から <word> を含む行を削除
+./localSetting.sh delete alias <word>  # .alias から <word> を含む行を削除
+./localSetting.sh delete tool all      # ツールをまとめてアンインストール（init tool で入れていないものも消す）
+./localSetting.sh delete <project-name> # プロジェクトと Docker 環境を削除
 ```
+
+コマンドの一覧と注意点は [docs/commands.md](docs/commands.md) にあります。
 
 ## インストールされるツール
 
@@ -102,14 +109,16 @@ local-setting/
 - jq（JSON処理）
 - yq（YAML処理）
 - expect（対話的操作自動化）
-- coreutils（GNU互換ツール群）
+- coreutils・findutils・gzip（GNU版。coreutils と findutils は `.zshrc` の PATH に追加され、`ls` や `find` などが GNU 版になる）
 
 ### 主要ツール
 
 - AWS CLI
-- Docker / Docker Compose
+- Docker CLI（Docker Desktop が入っていればインストールしない）
+- composer（PHP パッケージマネージャ）
 - anyenv（言語バージョン管理）
 - session-manager-plugin（AWS Session Manager）
+- Sequel Ace（データベースクライアント）
 
 ## 技術スタック
 
@@ -128,7 +137,7 @@ local-setting/
 
 ## 特徴
 
-- **段階的初期化**: `INIT_LOCAL_POINT` による進捗管理で、失敗時にリトライ可能
+- **段階的初期化**: `INIT_LOCAL_POINT` で進み具合を管理する。途中で失敗したときは、`INIT_LOCAL_POINT=2 ./localSetting.sh init local` のように番号を指定すると、その段階から再開できる（指定しないと最初から）
 - **モジュール設計**: 機能ごとに分離され、新機能の追加が容易
 - **セキュリティ**: 認証情報はプレースホルダ（@XXX@）で管理
 - **オブジェクト指向**: Bashでのクラスベース設計による保守性の高いコード

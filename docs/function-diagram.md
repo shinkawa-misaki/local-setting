@@ -14,7 +14,8 @@
 │       ▼                ▼                   ▼                                │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
 │  │                    src/app/commands/                                 │   │
-│  │  zsh.sh  alias.sh  ssh.sh  toolInstall.sh  docker.sh  upgrade.sh   │   │
+│  │  zsh.sh  alias.sh  ssh.sh  toolInstall.sh  toolUninstall.sh        │   │
+│  │  docker.sh  upgrade.sh  modules/<module>.sh                         │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                    │                                        │
 │                                    ▼                                        │
@@ -61,6 +62,9 @@ localSetting.sh
 │
 └── deleteModules()         # モジュール削除
     └── → modules/<module>.sh delete
+
+（init / update / delete の zsh・alias・ssh・tool は commands/*.sh を直接呼ぶ。
+  delete tool は toolUninstall.sh、docker と upgrade は docker.sh・upgrade.sh に残りの引数を渡す）
 ```
 
 ---
@@ -77,8 +81,8 @@ graph TD
     A --> E[ssh.sh init all]
 
     B --> B1[cleanUp]
-    B1 --> B2[unInstallZsh]
     B1 --> B3[installZsh]
+    B3 -->|y: 入れ直す| B2[UnInstallOhMyZsh → InstallOhMyZsh]
     B1 --> B4[zshrcOriginalInit]
     B1 --> B5[setZprofile]
 
@@ -108,8 +112,7 @@ graph TD
 zsh.sh
 │
 ├── cleanUp()                    # 初期化（メイン）
-│   ├── → unInstallZsh          (alias → ZshCommon::UnInstall)
-│   ├── → installZsh            (alias → ZshCommon::Install)
+│   ├── → installZsh            (alias → ZshCommon::Install。oh-my-zsh の入れ直しはこの中で、y のときだけ)
 │   ├── → zshrcOriginalInit     (lib/util_ext/zsh.sh)
 │   └── → setZprofile           (alias → ZshCommon::SetZprofile)
 │
@@ -128,7 +131,7 @@ zsh.sh
 │   ├── → zshrcOriginalReplaceWordOfRegExp
 │   └── → setLdapPass           (alias → ZshCommon::SetLdapPass)
 │
-└── updateLdapUser()             # LDAPユーザー更新
+└── updateLdapUser()             # LDAPユーザー更新（どのサブコマンドからも呼ばれていない）
     ├── → zshrcOriginalReplaceWordOfRegExp
     └── → setLdapUser           (alias → ZshCommon::SetLdapUser)
 ```
@@ -138,9 +141,10 @@ zsh.sh
 ```
 ZshCommon (helpers/zsh.sh)
 │
-├── SetZprofile()               # .zprofile設定
+├── SetZprofile()               # .zprofile設定（バックアップ → テンプレートで上書き → 元の行を patch で戻す）
 ├── Install()                   # zshインストール
-│   ├── → InstallOhMyZsh()
+│   ├── → UnInstallOhMyZsh()    (y のときだけ)
+│   ├── → InstallOhMyZsh()      (y のときだけ。.zshrc がリンクならリンク先に書き戻す)
 │   └── → InitZshrcOriginal()
 │       ├── → SetPassPhrase()
 │       ├── → SetGithubToken()
@@ -173,12 +177,14 @@ ssh.sh
 │   ├── → cleanUpSSHAdd()
 │   └── → outPutSuccess()
 │
-├── cleanUpSSHAdd()              # SSH鍵再登録
+├── cleanUpSSHAdd()              # ~/.ssh/keys の未登録の鍵だけ ssh-agent に登録（鍵がなければ何もしない）
 │   ├── → cleanSSHChmod         (alias → SSHCommon::CleanSSHChmod)
-│   └── → exSSHAdd              (lib/util_ext/ssh.sh)
+│   └── → exSSHAdd              (lib/util_ext/expect.sh)
 │
 ├── update()                     # 全SSH設定更新
-│   └── → updateModules()
+│   ├── → updateModules()
+│   ├── → cleanUpSSHAdd()
+│   └── → checkGitHubConnection (helpers/ssh/github.sh)
 │
 ├── initModules()                # モジュール初期化
 │   └── → ssh{Module}CleanUp    (動的alias呼び出し)
@@ -207,8 +213,7 @@ SSHCommon (helpers/ssh/common.sh)
 │   ├── → patchExecute()
 │   └── → UpdateConfig()
 │
-├── UpdateConfig()              # 設定追加
-│   └── → gsAddUniqueRow()
+├── UpdateConfig()              # Include 行を入れ直す（先頭: conf.d/*.conf、末尾: Match all + conf.d/default-config）
 │
 ├── ReMoveAllConfig()           # 設定削除
 ├── UpdateSetting()             # 設定更新
@@ -255,11 +260,28 @@ toolInstall.sh
 │
 ├── installDocker()              # Docker関連
 │   ├── → toolInstall("brew", "composer", ...)
+│   ├── （/Applications/Docker.app があればここで終わり）
 │   ├── → toolInstall("brew", "docker", ...)
 │   └── → toolReLink()
 │
 └── updateModules()              # モジュール更新
     └── → tool{Module}Install   (動的alias呼び出し)
+```
+
+### toolUninstall.sh
+
+```
+toolUninstall.sh
+│
+├── init_toolUnInstall()         # delete tool all
+│   ├── → unInstallDocker()      # docker-compose・docker・composer
+│   ├── → unInstallPHP()         # php-cs-fixer
+│   ├── → unInstallApps()        # sequel-pro-nightly・sequel-pro・sequel-ace・Coccinellida・Alfred 5
+│   ├── → unInstallGNULinuxTool()  # findutils・gzip・coreutils（.zshrc の行も消す）
+│   └── → unInstallIsolatedTools() # anyenv（rbenv・nodenv）・session-manager-plugin・awscli・expect・yq・jq・lolcat・tig
+│
+└── deleteModules()              # delete tool <module>
+    └── → tool{Module}UnInstall (動的alias呼び出し)
 ```
 
 ### helpers/tool/common.sh (Tool クラス)
@@ -281,7 +303,8 @@ Tool (helpers/tool/common.sh)
 │   ├── app判定 → IsExistFile()
 │   ├── brew判定
 │   ├── anyenv判定
-│   └── version判定
+│   ├── version判定
+│   └── versions判定
 │
 ├── ReLink()                    # リンク再作成
 ├── DeleteSetting()             # 設定削除
@@ -380,7 +403,7 @@ upgrade.sh
 ├── deleteTool()                # 不要ツール削除
 │   └── → toolUnInstall()
 │
-├── upgradeZsh()                # zsh設定更新
+├── upgradeZsh()                # zsh設定更新（どのサブコマンドからも呼ばれていない）
 │   ├── → gsDeleteLikeWord()
 │   ├── → gsAddTargetRowNo()
 │   ├── → upgradeTool()
@@ -395,7 +418,7 @@ upgrade.sh
 │   ├── → toolInstall.sh init
 │   └── → modules/<module>.sh update tool
 │
-├── upgradeSSH()                # SSH設定更新
+├── upgradeSSH()                # SSH設定更新（どのサブコマンドからも呼ばれていない）
 │   └── rm ~/.ssh/known_hosts
 │
 ├── upgradeEnv()                # 環境変数更新
@@ -406,6 +429,9 @@ upgrade.sh
 │
 └── upgradeTestSetting()        # テスト設定リセット
     └── → toolUnInstall("anyenv")
+
+（引数なしの upgrade は関数を使わず、このリポジトリで
+  git checkout . → git clean -df → git checkout master → git pull → brew update → brew upgrade を実行する）
 ```
 
 ---
@@ -456,7 +482,14 @@ util_ext/
 │
 ├── ssh.sh                      # SSH操作
 │   ├── sshCreateKey()
-│   └── exSSHAdd()
+│   ├── sshCommand()
+│   ├── sshScpCommand()
+│   └── sshConnectionCheck()
+│
+├── expect.sh                   # 対話の自動入力（expect）
+│   ├── exKeygen()
+│   ├── exSSHAdd()
+│   └── exSSHCommand()
 │
 ├── chmod.sh                    # 権限操作
 │   ├── dirAllOwnerOfUser()
@@ -479,8 +512,9 @@ util_ext/
 │   └── ymlGetArrayToString()
 │
 ├── github.sh                   # GitHub操作
-│   ├── githubClone()
-│   └── githubLatest()
+│   ├── cloneProject()
+│   ├── rebaseDev()
+│   └── rebaseMaster()
 │
 ├── providers.sh                # パスプロバイダー
 │   ├── resourceDir()
@@ -497,7 +531,10 @@ util_ext/
 
 ---
 
-## クラス継承・依存関係
+## クラスの依存関係
+
+継承ではなく、各クラスが他のクラスを `private` のメンバーとして持つ（コンポジション）。
+下の図の矢印は「上のクラスを中で使う」という意味。
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -516,14 +553,16 @@ util_ext/
                                     │
                     ┌───────────────┼───────────────┐
                     ▼               ▼               ▼
-    ┌─────────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-    │   GitHubCommon      │ │  DockerCommon   │ │    EnvCommon    │
-    │ ┌─────────────────┐ │ │ ┌─────────────┐ │ │ ┌─────────────┐ │
-    │ │ Clone()         │ │ │ │ Build()     │ │ │ │ Setting()   │ │
-    │ │ Latest()        │ │ │ │ Destroy()   │ │ │ │ Update()    │ │
-    │ │ Skip()          │ │ │ │ Import()    │ │ │ └─────────────┘ │
-    │ └─────────────────┘ │ │ └─────────────┘ │ └─────────────────┘
-    └─────────────────────┘ └─────────────────┘
+    ┌─────────────────────┐ ┌──────────────────────────┐ ┌──────────────────┐
+    │   GitHubCommon      │ │  DockerCommon            │ │    EnvCommon     │
+    │ ┌─────────────────┐ │ │ ┌──────────────────────┐ │ │ ┌──────────────┐ │
+    │ │ Clone()         │ │ │ │ ProjectArchive()     │ │ │ │SettingDefault│ │
+    │ │ Latest()        │ │ │ │ ProjectBuild()       │ │ │ │SettingTesting│ │
+    │ │ Skip()/NoSkip() │ │ │ │ ContainerDBImport    │ │ │ │SetKeyValue() │ │
+    │ │ LocalRepository │ │ │ │   DataBase()         │ │ │ │AwsOutPut     │ │
+    │ │   Hooks()       │ │ │ │ ProjectCurlCheck()   │ │ │ │  Secret()    │ │
+    │ └─────────────────┘ │ │ └──────────────────────┘ │ │ └──────────────┘ │
+    └─────────────────────┘ └──────────────────────────┘ └──────────────────┘
                     │               │               │
                     └───────────────┼───────────────┘
                                     ▼
@@ -589,7 +628,9 @@ localSetting.sh
     │
     ├─[delete]────► commands/*.sh ──► 設定・ファイル削除
     │
-    ├─[docker]────► docker.sh ────► DockerProject ──► docker-compose
+    ├─[docker]────► docker.sh ────► Config + lib/util_ext/docker.sh ──► docker compose
+    │
+    ├─[init/update/delete <module>]──► modules/<module>.sh ──► DockerProject ──► git・docker compose
     │
     └─[upgrade]───► upgrade.sh ───► 全モジュールの更新
                                             │

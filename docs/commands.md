@@ -20,8 +20,7 @@
 | `init ssh all` | 全SSH設定の初期化 |
 | `init ssh chmod` | SSH鍵のパーミッション設定のみ実行 |
 | `init ssh <module>` | 指定モジュールのSSH設定を初期化 |
-| `init tool` | 全ツールのインストール |
-| `init tool <name>` | 指定ツールのインストール |
+| `init tool` | 全ツールのインストール（`init tool <name>` のように名前を付けても、すべて入れる） |
 | `init <module>` | カスタムモジュールの初期化 |
 
 ### init local の実行順序
@@ -32,6 +31,10 @@
 4. zshrc_originalの更新
 5. SSH設定の初期化
 6. シェル再ログイン
+
+進み具合は `INIT_LOCAL_POINT` で管理するが、値は実行中のプロセスの中にしか残らない。
+途中で失敗すると止まり、次に実行するとまた最初（zsh）から始まる。
+途中から再開したいときは、`INIT_LOCAL_POINT=2 ./localSetting.sh init local` のように番号を指定する（0: zsh, 1: alias, 2: tool, 3: ssh）。
 
 ---
 
@@ -71,7 +74,7 @@
 | コマンド | 説明 |
 |----------|------|
 | `update tool all` | brew update && brew upgrade を実行 |
-| `update tool <module>` | 指定モジュールのツールを再インストール |
+| `update tool <module>` | 指定モジュールのツールをインストール（`tool<Module>Install` がある場合。例: `template`） |
 
 ### モジュール関連
 
@@ -89,8 +92,15 @@
 |----------|------|
 | `delete zsh <word>` | zshrc_originalから指定ワードを削除 |
 | `delete alias <word>` | エイリアスから指定ワードを削除 |
-| `delete tool <name>` | 指定ツールをアンインストール |
+| `delete tool all` | ツールをまとめてアンインストール（下記） |
+| `delete tool <module>` | 指定モジュールのツールをアンインストール（`tool<Module>UnInstall` がある場合。例: `template`） |
 | `delete <module>` | カスタムモジュールを削除 |
+
+`delete tool all` は `init tool` で入れていないものも消すので注意:
+docker-compose、docker、composer、sequel-pro-nightly、sequel-pro、sequel-ace、Coccinellida、Alfred 5、
+findutils、gzip、coreutils、anyenv（`~/.anyenv` と anyenv の rbenv・nodenv を含む）、
+session-manager-plugin、awscli、expect、yq、jq、lolcat、tig、`$(brew --prefix)/bin/php-cs-fixer`。
+あわせて `.zshrc` から findutils・gzip・coreutils・anyenv の行を消す。
 
 ---
 
@@ -124,19 +134,27 @@
 | `upgrade alias` | エイリアス初期化 → 各モジュールのエイリアス更新 |
 | `upgrade hooks` | 各モジュールのGitHooks設定を更新 |
 | `upgrade test` | テスト環境設定をリセット（anyenv削除等） |
-| `upgrade` | リポジトリ更新 → brew update/upgrade |
+| `upgrade` | このリポジトリを master の最新にする → brew update/upgrade |
+
+> **注意**: 引数なしの `upgrade` は、このリポジトリで `git checkout .`・`git clean -df`・`git checkout master`・`git pull origin` を実行する。
+> コミットしていない変更と、Git の管理外のファイルは消える。
 
 ---
 
 ## clean - クリーンアップコマンド
 
-設定を完全に削除
+設定を削除する。`localSetting.sh` からは呼べないので、`LOCAL_SETTING` を設定してスクリプトを直接実行する。
+
+```bash
+export LOCAL_SETTING="$(pwd)"   # リポジトリのルートで実行
+./src/app/commands/zsh.sh clean
+```
 
 | コマンド | 説明 |
 |----------|------|
-| `zsh.sh clean` | zshをアンインストール |
-| `alias.sh clean` | エイリアス設定を削除 |
-| `ssh.sh clean` | SSH設定を削除 |
+| `zsh.sh clean` | oh-my-zsh をアンインストール（zsh 本体は消さない） |
+| `alias.sh clean` | `~/.alias` を削除し、`.zshrc_original` から読み込みの行を消す |
+| `ssh.sh clean` | 各モジュールの SSH 設定を消し、`~/.ssh/config` をバックアップから戻す |
 
 ---
 
@@ -174,7 +192,7 @@
 | ツール | 説明 | インストールコマンド |
 |--------|------|---------------------|
 | composer | PHPパッケージマネージャ | `brew install composer` |
-| docker | Docker CLI | `brew install docker` |
+| docker | Docker CLI（Docker Desktop が入っていれば入れない） | `brew install docker` |
 
 ---
 
@@ -199,8 +217,19 @@
 
 | 変数名 | 説明 |
 |--------|------|
-| `LOCAL_SETTING` | リポジトリのルートパス（自動設定） |
-| `INIT_LOCAL_POINT` | init local の進捗管理（0-4） |
+| `LOCAL_SETTING` | リポジトリのルートパス（`localSetting.sh` が毎回設定する） |
+| `INIT_LOCAL_POINT` | init local の進捗管理（0-4。実行中だけ保持） |
+
+`.zshrc_original` で設定し、スクリプトから使う環境変数
+
+| 変数名 | 使う場所 |
+|--------|------|
+| `LDAP_USER` | `init ssh all`（`~/.ssh/conf.d/default-config` の User）。空なら実行時に聞かれる |
+| `PASS_PHRASE` | `update ssh ssh-add`（`~/.ssh/keys` の鍵を登録するときのパスフレーズ） |
+| `GITHUB_TOKEN` | export されるので、`gh` などはログイン済みのアカウントより先にこのトークンを使う |
+| `LDAP_STG_PASS` / `LDAP_PRD_PASS` | LDAP のパスワード |
+
+前提: Homebrew がインストール済みであること。`gsed`（gnu-sed）がなければ、初回実行時に自動でインストールされる。
 
 ---
 
