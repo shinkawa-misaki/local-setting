@@ -1,0 +1,29 @@
+# nomatch setting
+unsetopt nomatch
+
+# pear
+PATH=$HOME/pear/bin:$PATH
+
+# composer
+PATH=$HOME/.composer/vendor/bin:$PATH
+
+# Apple Silicon の Homebrew の PATH は .zprofile（brew shellenv）で設定する。
+# 以前は PATH の usr/local を opt/homebrew に置き換えていたが、
+# Docker Desktop など /usr/local/bin に入るコマンドが使えなくなるのでやめた
+
+# local-setting dir
+export LOCAL_SETTING="@LOCAL_SETTING@"
+
+# GITHUB
+export GITHUB_TOKEN=@GITHUB_TOKEN@
+
+# passphrase
+export PASS_PHRASE=@PASS_PHRASE@
+
+# LDAP
+export LDAP_USER=@LDAP_USER@
+export LDAP_STG_PASS=@LDAP_STG_PASS@
+export LDAP_PRD_PASS=@LDAP_PRD_PASS@
+
+# ssh-addを常態化
+$LOCAL_SETTING/localSetting.sh update ssh ssh-add &> /dev/null

@@ -1,0 +1,9 @@
+.git
+.idea/
+.DS_Store
+
+# ssh の設定で ~/.ssh/keys からコピーされる秘密鍵（絶対にコミットしない）
+src/resource/ssh/keys/
+
+# Docker プロジェクトの初期化で作られるデータベースのダンプ
+src/resource/docker/dump.sql
